@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>호주 은퇴 재정 도구 | 노령연금·포트폴리오·인출 백테스트</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #0f2d4a;
+      --accent: #00b894;
+      --accent2: #0984e3;
+      --bg: #f4f7fa;
+      --card: #ffffff;
+      --text: #1a202c;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    header { background: var(--primary); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+    .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; color: white; }
+    .logo-text { font-size: 1.1rem; font-weight: 800; color: white; letter-spacing: -0.5px; }
+    .logo-sub { font-size: 0.65rem; color: rgba(255,255,255,0.5); font-weight: 400; }
+    nav { display: flex; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    nav::-webkit-scrollbar { display: none; }
+    .nav-btn { padding: 7px 12px; border-radius: 8px; border: none; background: transparent; color: rgba(255,255,255,0.65); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.18s; white-space: nowrap; flex-shrink: 0; }
+    .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.14); color: white; }
+
+    /* HERO */
+    .hero { background: linear-gradient(135deg, var(--primary) 0%, #1a4a7a 50%, #0984e3 100%); padding: 48px 24px; text-align: center; color: white; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 70% 50%, rgba(0,184,148,0.15) 0%, transparent 60%); }
+    .hero-badge { display: inline-block; background: rgba(0,184,148,0.2); border: 1px solid rgba(0,184,148,0.4); color: #00b894; border-radius: 99px; padding: 4px 14px; font-size: 0.75rem; font-weight: 700; margin-bottom: 14px; }
+    .hero h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1px; line-height: 1.2; margin-bottom: 10px; }
+    .hero h1 span { color: #00b894; }
+    .hero p { font-size: 0.95rem; opacity: 0.8; max-width: 480px; margin: 0 auto 24px; line-height: 1.7; }
+    .hero-stats { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; }
+    .stat .num { font-size: 1.4rem; font-weight: 800; color: #00b894; }
+    .stat .lbl { font-size: 0.72rem; opacity: 0.65; margin-top: 2px; }
+
+    /* MAIN */
+    .main { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    .section-title { font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
+    .section-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 20px; }
+
+    /* TOOL CARDS */
+    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+    @media (max-width: 768px) { .tools-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .tools-grid { grid-template-columns: 1fr; } }
+    .tool-card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border); cursor: pointer; transition: all 0.2s; text-decoration: none; color: inherit; display: block; position: relative; overflow: hidden; }
+    .tool-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); border-color: var(--accent2); }
+    .tool-card.active-tool { border-color: var(--accent); box-shadow: 0 4px 20px rgba(0,184,148,0.2); }
+    .tool-card.coming-soon { opacity: 0.55; cursor: default; }
+    .tool-card.coming-soon:hover { transform: none; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-color: var(--border); }
+    .card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 12px; }
+    .icon-green { background: #d1fae5; } .icon-blue { background: #dbeafe; } .icon-purple { background: #ede9fe; }
+    .icon-orange { background: #ffedd5; } .icon-pink { background: #fce7f3; } .icon-yellow { background: #fef9c3; }
+    .icon-teal { background: #ccfbf1; } .icon-red { background: #fee2e2; }
+    .card-tag { position: absolute; top: 12px; right: 12px; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 99px; }
+    .tag-live { background: #d1fae5; color: #065f46; }
+    .tag-soon { background: #f1f5f9; color: #94a3b8; }
+    .tool-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; }
+    .tool-card p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    /* CALC PANEL */
+    .calc-panel { background: var(--card); border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 40px; }
+    .calc-header { background: linear-gradient(135deg, var(--primary), #1a4a7a); padding: 18px 24px; color: white; display: flex; align-items: center; gap: 12px; }
+    .calc-header .ch-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .calc-header h2 { font-size: 1.05rem; font-weight: 700; }
+    .calc-header p { font-size: 0.76rem; opacity: 0.7; margin-top: 2px; }
+    .calc-body { padding: 24px; }
+    .divider { height: 1px; background: var(--border); margin: 18px 0; }
+    .back-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.85rem; padding: 0; margin-bottom: 16px; }
+
+    /* FORM */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    @media (max-width: 560px) { .form-grid, .form-grid-3 { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 0.83rem; font-weight: 600; color: #4a5568; }
+    .form-group .hint { font-size: 0.72rem; color: var(--muted); }
+    .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .radio-btn { flex: 1; min-width: 70px; }
+    .radio-btn input { display: none; }
+    .radio-btn label { display: block; text-align: center; padding: 9px 8px; border: 2px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 0.84rem; font-weight: 600; color: var(--muted); transition: all 0.18s; }
+    .radio-btn input:checked + label { border-color: var(--accent2); background: #eff6ff; color: #1d4ed8; }
+    .input-wrap { position: relative; }
+    .input-prefix { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-weight: 600; font-size: 0.9rem; }
+    .input-suffix { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.82rem; }
+    input[type="number"] { padding: 10px 12px 10px 26px; border: 2px solid var(--border); border-radius: 10px; font-size: 0.95rem; color: var(--text); width: 100%; transition: border-color 0.18s; }
+    input[type="number"]:focus { outline: none; border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(9,132,227,0.1); }
+
+    /* WORK BONUS */
+    .wb-box { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 14px; padding: 18px; margin-top: 4px; }
+    .wb-title { font-size: 0.9rem; font-weight: 700; color: #166534; margin-bottom: 12px; }
+    .wb-explainer { background: white; border-radius: 10px; padding: 12px; border: 1px solid #bbf7d0; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .wb-row { display: flex; gap: 8px; font-size: 0.8rem; color: #374151; line-height: 1.6; }
+    .wb-row strong { color: #166534; }
+    .wb-highlight { display: inline-block; margin-top: 4px; background: #dcfce7; border-radius: 6px; padding: 2px 8px; font-size: 0.76rem; font-weight: 700; color: #166534; }
+    .wb-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .wb-option { display: flex; gap: 10px; align-items: flex-start; }
+    .wb-option input[type="radio"] { margin-top: 3px; accent-color: #16a34a; flex-shrink: 0; }
+    .ib-title { font-size: 0.84rem; font-weight: 700; color: var(--text); display: block; }
+    .ib-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; display: block; margin-top: 2px; }
+
+    /* PERIOD TOGGLE */
+    .period-toggle { display: flex; background: var(--bg); border-radius: 10px; padding: 4px; gap: 4px; width: fit-content; margin: 0 auto 18px; }
+    .period-btn { padding: 7px 18px; border: none; border-radius: 8px; font-size: 0.83rem; font-weight: 600; cursor: pointer; background: transparent; color: var(--muted); transition: all 0.18s; }
+    .period-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
+
+    /* RESULTS */
+    .result-hero { background: linear-gradient(135deg, var(--primary), #0984e3); border-radius: 14px; color: white; padding: 24px; text-align: center; margin-bottom: 16px; }
+    .result-hero .lbl { font-size: 0.85rem; opacity: 0.8; margin-bottom: 6px; }
+    .result-hero .amount { font-size: 2.6rem; font-weight: 900; letter-spacing: -1px; }
+    .result-hero .plbl { font-size: 0.82rem; opacity: 0.7; margin-top: 4px; }
+    .multi-amounts { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+    .mini-amt { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 7px 12px; font-size: 0.82rem; }
+    .mini-amt span { opacity: 0.7; font-size: 0.72rem; display: block; margin-bottom: 2px; }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    @media (max-width: 560px) { .result-grid { grid-template-columns: 1fr; } }
+    .result-item { background: var(--bg); border-radius: 12px; padding: 14px; border-left: 4px solid var(--accent2); }
+    .r-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+    .r-value { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+    .r-sub { font-size: 0.75rem; color: #a0aec0; margin-top: 2px; }
+    .test-block { background: var(--bg); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .test-block h4 { font-size: 0.86rem; font-weight: 700; color: #4a5568; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .bar-wrap { background: #e2e8f0; border-radius: 99px; height: 6px; margin: 7px 0; }
+    .bar { height: 6px; border-radius: 99px; transition: width 0.6s; }
+    .bar-green { background: linear-gradient(90deg, #10b981, #34d399); }
+    .bar-orange { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .bar-red { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .test-detail { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); }
+    .ttag { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; }
+    .ttag-income { background: #dbeafe; color: #1d4ed8; }
+    .ttag-assets { background: #fef3c7; color: #92400e; }
+    .ttag-full { background: #d1fae5; color: #065f46; }
+    .breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    .breakdown-table th { text-align: left; padding: 8px 10px; background: var(--bg); color: var(--muted); font-weight: 600; font-size: 0.76rem; border-bottom: 1px solid var(--border); }
+    .breakdown-table td { padding: 9px 10px; border-bottom: 1px solid #f0f4f8; color: #2d3748; }
+    .breakdown-table tr:last-child td { border-bottom: none; }
+    .total-row td { font-weight: 700; color: var(--primary); background: #eff6ff; }
+    .green-row td { color: #166534; background: #f0fdf4; }
+    .calc-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary), #0984e3); color: white; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: transform 0.15s, box-shadow 0.15s; }
+    .calc-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(9,132,227,0.35); }
+    .calc-btn-green { background: linear-gradient(135deg, #059669, #10b981); }
+    .calc-btn-green:hover { box-shadow: 0 6px 20px rgba(16,185,129,0.35); }
+    .info-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 14px; font-size: 0.79rem; color: #1e40af; line-height: 1.7; margin-top: 14px; }
+    .info-box strong { color: var(--primary); }
+    .warn-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 14px; font-size: 0.79rem; color: #92400e; line-height: 1.7; margin-top: 14px; }
+    .none-box { background: #fff5f5; border: 1px solid #fed7d7; border-radius: 12px; padding: 20px; text-align: center; }
+    .none-box h3 { color: #c53030; font-size: 1rem; margin-bottom: 6px; }
+    .none-box p { font-size: 0.82rem; color: var(--muted); }
+    .wb-applied { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 8px 12px; font-size: 0.78rem; color: #166534; margin-bottom: 10px; }
+
+    /* SECTION HEADER BADGE */
+    .sec-label { font-size: 0.75rem; font-weight: 700; background: var(--accent); color: white; border-radius: 6px; padding: 2px 8px; display: inline-block; margin-bottom: 6px; }
+
+    /* OPTIMIZER */
+    .asset-section { background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+    .asset-section-title { font-size: 0.9rem; font-weight: 700; color: var(--primary); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .preset-btn { padding: 8px 16px; border: 2px solid var(--accent2); background: white; color: var(--accent2); border-radius: 10px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.18s; }
+    .preset-btn:hover { background: var(--accent2); color: white; }
+
+    /* SCENARIO TABLE */
+    .scenario-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    .scenario-table th { padding: 9px 12px; text-align: center; background: var(--primary); color: white; font-size: 0.78rem; font-weight: 600; }
+    .scenario-table td { padding: 9px 12px; text-align: center; border-bottom: 1px solid var(--border); }
+    .scenario-table tr.highlight-row { background: #fef3c7; font-weight: 700; }
+    .scenario-table tr.highlight-row td { color: #92400e; }
+    .scenario-table tr:hover { background: #f0f9ff; }
+    .scenario-table td.total-col { background: #eff6ff; font-weight: 800; color: #1d4ed8; }
+    .scenario-table tr.highlight-row td.total-col { background: #fde68a; color: #92400e; }
+    .yield-btn { padding: 8px 14px; border: 2px solid var(--border); border-radius: 10px; background: white; cursor: pointer; font-size: 0.82rem; font-weight: 700; color: var(--muted); transition: all 0.18s; text-align: center; line-height: 1.4; }
+    .yield-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+    .yield-btn-active { border-color: var(--accent2) !important; background: #eff6ff !important; color: #1d4ed8 !important; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; }
+    .pill-green { background: #d1fae5; color: #065f46; }
+    .pill-orange { background: #fef3c7; color: #92400e; }
+    .pill-red { background: #fee2e2; color: #991b1b; }
+
+    /* INCOME FREQ SELECTOR */
+    .income-row { display: flex; gap: 8px; align-items: center; }
+    .freq-sel { padding: 10px 8px; border: 2px solid var(--border); border-radius: 10px; font-size: 0.82rem; font-weight: 600; color: var(--text); background: white; cursor: pointer; flex-shrink: 0; min-width: 70px; }
+    .freq-sel:focus { outline: none; border-color: var(--accent2); }
+    .fn-preview { font-size: 0.76rem; color: var(--accent2); font-weight: 700; margin-top: 3px; min-height: 16px; }
+
+    /* STRATEGY CARDS */
+    .strategy-card { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .strategy-card .strat-title { font-size: 0.88rem; font-weight: 700; color: #166534; margin-bottom: 6px; }
+    .strategy-card .strat-body { font-size: 0.8rem; color: #374151; line-height: 1.6; }
+    .strategy-card .strat-gain { font-size: 1rem; font-weight: 700; color: #059669; margin-top: 6px; }
+
+    /* TIMELINE */
+    .timeline-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .timeline-table th { padding: 8px 10px; text-align: center; background: var(--primary); color: white; font-size: 0.75rem; font-weight: 600; position: sticky; top: 60px; }
+    .timeline-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+    .timeline-table tr.fire-row { background: linear-gradient(90deg, #d1fae5, #ecfdf5); font-weight: 700; }
+    .timeline-table tr.abp-row { background: #eff6ff; }
+    .timeline-table tr.asset-row { background: #fffbeb; }
+    .timeline-table tr.current-row { background: #fce7f3; }
+    .timeline-table td.total-col { font-weight: 700; color: var(--primary); background: #f0f9ff; }
+    .milestone-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; background: #fde68a; color: #92400e; margin-left: 4px; }
+    .table-scroll { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    .rate-input-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; background: #eff6ff; border-radius: 10px; padding: 12px 16px; }
+    .rate-input-row label { font-size: 0.83rem; font-weight: 600; color: var(--primary); white-space: nowrap; }
+    .rate-input-row input { padding: 7px 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; width: 120px; }
+    .summary-row td { font-weight: 700; background: var(--primary); color: white; }
+
+    /* SMSF */
+    .smsf-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .smsf-table th { padding: 9px 12px; text-align: left; background: var(--primary); color: white; font-size: 0.76rem; }
+    .smsf-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+    .smsf-table tr.expired { opacity: 0.45; }
+    .smsf-table tr.urgent { background: #fef2f2; font-weight: 700; }
+    .smsf-table td.danger { color: #dc2626; font-weight: 700; }
+    .smsf-table td.amount { text-align: right; font-weight: 600; color: var(--primary); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+    .smsf-sim-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .smsf-sim-table th { padding: 8px 10px; text-align: left; background: #1e40af; color: white; font-size: 0.74rem; }
+    .smsf-sim-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+    .smsf-sim-table tr.milestone-row { background: #eff6ff; font-weight: 700; color: var(--primary); }
+    .smsf-sim-table tr.abp-row { background: #d1fae5; font-weight: 700; color: #065f46; }
+
+    /* D-DAY CARDS */
+    .dday-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    @media (max-width: 700px) { .dday-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .dday-grid { grid-template-columns: 1fr; } }
+    .dday-card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); border: 2px solid var(--border); text-align: center; position: relative; overflow: hidden; }
+    .dday-card.done { border-color: #86efac; background: #f0fdf4; }
+    .dday-card.urgent { border-color: #fca5a5; background: #fff5f5; }
+    .dday-card.near { border-color: #fde68a; background: #fffbeb; }
+    .dday-card.far { border-color: #bfdbfe; background: #eff6ff; }
+    .dday-card.fire { border-color: var(--accent); background: linear-gradient(135deg, #f0fdf4, #d1fae5); }
+    .dday-icon { font-size: 2rem; margin-bottom: 8px; }
+    .dday-title { font-size: 0.82rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .dday-date { font-size: 0.72rem; color: var(--muted); margin-bottom: 10px; }
+    .dday-num { font-size: 2.4rem; font-weight: 900; letter-spacing: -2px; line-height: 1; }
+    .dday-num.done-num { color: #059669; }
+    .dday-num.urgent-num { color: #dc2626; }
+    .dday-num.near-num { color: #d97706; }
+    .dday-num.far-num { color: #1d4ed8; }
+    .dday-num.fire-num { color: var(--accent); }
+    .dday-unit { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+    .dday-progress { height: 5px; background: #e2e8f0; border-radius: 99px; margin-top: 10px; overflow: hidden; }
+    .dday-bar { height: 100%; border-radius: 99px; transition: width 1s; }
+    .dday-desc { font-size: 0.72rem; color: var(--muted); margin-top: 8px; line-height: 1.4; }
+
+    /* AGE PENSION CUTOFF WARNING */
+    .cutoff-warning { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .cutoff-warning h4 { font-size: 0.9rem; margin-bottom: 6px; }
+    .cutoff-warning p { font-size: 0.78rem; opacity: 0.85; line-height: 1.6; }
+
+    footer { background: var(--primary); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 0.78rem; line-height: 1.8; }
+    footer strong { color: rgba(255,255,255,0.8); }
+    #results { display: none; }
+    #opt-results { display: none; }
+    /* 인출 백테스트 시뮬레이터 */
+    .bt-wrow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .bt-wrow .bt-tk { width: 52px; font-weight: 700; font-size: 0.85rem; color: var(--primary); }
+    .bt-wrow input[type=range] { flex: 1; accent-color: var(--accent2); }
+    .bt-wrow .bt-pv { width: 44px; text-align: right; font-weight: 700; color: var(--accent2); font-variant-numeric: tabular-nums; font-size: 0.85rem; }
+    .bt-select { padding: 10px 12px; border: 2px solid var(--border); border-radius: 10px; font-size: 0.9rem; color: var(--text); width: 100%; background: white; }
+    .bt-select:focus { outline: none; border-color: var(--accent2); }
+    .bt-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .bt-stat { background: var(--bg); border-radius: 10px; padding: 10px 12px; border: 1px solid var(--border); }
+    .bt-stat .k { font-size: 0.7rem; color: var(--muted); }
+    .bt-stat .v { font-size: 1.05rem; font-weight: 800; margin-top: 3px; font-variant-numeric: tabular-nums; }
+    .bt-good { color: #059669; } .bt-bad { color: #dc2626; } .bt-warn { color: #d97706; }
+    .bt-chart svg { width: 100%; height: auto; display: block; }
+    .bt-legend { display: flex; gap: 14px; font-size: 0.72rem; color: var(--muted); margin-top: 6px; flex-wrap: wrap; }
+    .bt-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; }
+    .bt-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .bt-table th, .bt-table td { padding: 7px 8px; text-align: right; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+    .bt-table th { color: var(--muted); font-weight: 700; font-size: 0.72rem; }
+    .bt-table th:first-child, .bt-table td:first-child { text-align: left; }
+    .bt-sub { font-size: 0.92rem; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .bt-sub span { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+    .bt-tip { position: absolute; background: rgba(255,255,255,0.97); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 10px; font-size: 0.75rem; color: var(--text);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12); pointer-events: none; z-index: 5;
+      line-height: 1.7; white-space: nowrap; }
+    .bt-term { border-bottom: 1.5px dotted currentColor; cursor: help; }
+    .bt-pop { position: absolute; z-index: 200; max-width: 330px; background: var(--primary);
+      color: white; padding: 11px 14px; border-radius: 10px; font-size: 0.78rem;
+      line-height: 1.7; box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
+    .bt-pop b { color: #7dd3fc; }
+    .bt-wtable { border-collapse: collapse; }
+    .bt-wtable th { font-size: 0.74rem; color: var(--muted); font-weight: 700; padding: 4px 10px; text-align: center; }
+    .bt-wtable td { padding: 5px 10px; text-align: center; }
+    .bt-wtable td:first-child, .bt-wtable th:first-child { text-align: left; padding-left: 0; }
+    .bt-wtable input[type=number] { width: 130px; padding: 8px 10px; border: 2px solid var(--border);
+      border-radius: 10px; font-size: 0.9rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">O</div>
+    <div>
+      <div class="logo-text">ORGO Finance</div>
+      <div class="logo-sub">호주 은퇴 재정 도구</div>
+    </div>
+  </a>
+  <nav>
+    <button class="nav-btn active" data-sec="home" onclick="showSection('home')">🏠 홈</button>
+    <button class="nav-btn" data-sec="pension" onclick="showSection('pension')">🏦 노령연금</button>
+    <button class="nav-btn" data-sec="portfolio" onclick="showSection('portfolio')">💼 포트폴리오</button>
+    <button class="nav-btn" data-sec="backtest" onclick="showSection('backtest')">📉 인출백테스트</button>
+  </nav>
+</header>
+
+<!-- ===== HOME ===== -->
+<div id="sec-home">
+  <div class="hero">
+    <div class="hero-badge">🇦🇺 호주 은퇴 재정 도구</div>
+    <h1>호주 은퇴,<br/><span>스스로</span> 계산하세요</h1>
+    <p>Age Pension · 포트폴리오 배당 · 인출 백테스트 — 세 가지 무료 도구</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="num">3</div><div class="lbl">무료 계산 도구</div></div>
+      <div class="stat"><div class="num">20년</div><div class="lbl">백테스트 실데이터</div></div>
+      <div class="stat"><div class="num">$0</div><div class="lbl">가입·설치 불필요</div></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="section-title">📊 재정 분석 도구</div>
+    <div class="section-sub">원하는 항목을 클릭하세요 — 입력값은 브라우저 안에서만 계산되며 어디에도 전송·저장되지 않습니다</div>
+    <div class="tools-grid">
+      <a class="tool-card active-tool" onclick="showSection('pension'); return false;" href="#">
+        <span class="card-tag tag-live">✓ 사용 가능</span>
+        <div class="card-icon icon-green">🏦</div>
+        <h3>노령연금 계산기</h3>
+        <p>Age Pension 수령액을 소득·자산 테스트로 계산. Work Bonus 포함.</p>
+      </a>
+      <a class="tool-card active-tool" onclick="showSection('portfolio'); return false;" href="#">
+        <span class="card-tag tag-live">✓ 사용 가능</span>
+        <div class="card-icon icon-purple">💼</div>
+        <h3>포트폴리오 배당 계산기</h3>
+        <p>Super/Non-Super, 자산분류별 비중·배당율 입력 → 월/연 배당 현금흐름.</p>
+      </a>
+      <a class="tool-card active-tool" onclick="showSection('backtest'); return false;" href="#">
+        <span class="card-tag tag-live">✓ 사용 가능</span>
+        <div class="card-icon icon-red">📉</div>
+        <h3>인출 백테스트 시뮬레이터</h3>
+        <p>QLD·SCHD·JEPQ·VAS 실데이터 백테스트. 비중·인출액별 고갈확률·배당 현금흐름 분석.</p>
+      </a>
+    </div>
+    <div class="warn-box" style="margin-top:20px;">
+      <strong>⚠ 면책</strong> — 본 도구는 교육·참고용 계산기이며 개인 맞춤 금융조언이 아닙니다.
+      실제 결정은 등록된 재무설계사(financial adviser)나 Centrelink·ATO 등 공식 기관에 확인하세요.
+      요율은 작성 시점 기준이며 변경될 수 있습니다. 과거 수익률은 미래를 보장하지 않습니다.
+    </div>
+  </div>
+</div>
+
+<!-- ===== 노령연금 계산기 ===== -->
+<div id="sec-pension" style="display:none">
+  <div class="main">
+    <button class="back-btn" onclick="showSection('home')">← 홈으로</button>
+    <div class="calc-panel">
+      <div class="calc-header">
+        <div class="ch-icon">🏦</div>
+        <div><h2>호주 노령연금 계산기</h2><p>2026년 3월 기준 | Services Australia 공식 요율</p></div>
+      </div>
+      <div class="calc-body">
+        <div class="form-grid" style="margin-bottom:18px;">
+          <div class="form-group">
+            <label>결혼 / 파트너 상태</label>
+            <div class="radio-group">
+              <div class="radio-btn"><input type="radio" name="status" id="single" value="single" checked/><label for="single">싱글</label></div>
+              <div class="radio-btn"><input type="radio" name="status" id="couple" value="couple"/><label for="couple">커플 (합산)</label></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>자가 주택 소유 여부</label>
+            <div class="radio-group">
+              <div class="radio-btn"><input type="radio" name="homeowner" id="owner-yes" value="yes" checked/><label for="owner-yes">소유자</label></div>
+              <div class="radio-btn"><input type="radio" name="homeowner" id="owner-no" value="no"/><label for="owner-no">비소유자</label></div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="form-grid" style="margin-bottom:18px;">
+          <div class="form-group">
+            <label>격주 소득 합계 (Fortnightly Income)</label>
+            <span class="hint">임대·투자·Super 인출 등 — 근로소득 제외</span>
+            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="income" placeholder="0" min="0" value="0"/></div>
+          </div>
+          <div class="form-group">
+            <label>총 자산 (Assessable Assets)</label>
+            <span class="hint">부동산(자가 제외), 금융자산, Super 잔액 합산</span>
+            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="assets" placeholder="0" min="0" value="0"/></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="wb-box">
+          <div class="wb-title">💼 Work Bonus (근로소득 면제 제도)</div>
+          <div class="wb-explainer">
+            <div class="wb-row"><span>✅</span><div><strong>Work Bonus란?</strong> Age Pension을 받으면서 일할 때 근로소득 일부를 소득 테스트에서 면제해주는 제도. <strong>고용·자영업 소득에만</strong> 적용.</div></div>
+            <div class="wb-row"><span>🪙</span><div><strong>매 격주 $300 자동 면제</strong> — 근로소득 중 첫 $300은 항상 제외됩니다.</div></div>
+            <div class="wb-row"><span>🏦</span><div><strong>Income Bank란?</strong> Centrelink 가상 적립통. 일을 <strong>하지 않은 특정 격주</strong>의 면제($300)를 포인트로 적립해뒀다가, 일을 <strong>많이 한 특정 격주</strong>에 꺼내 쓰는 방식 (최대 $11,800). <span class="wb-highlight">신규 수령자 첫날 $4,000 자동 지급</span></div></div>
+          </div>
+          <div style="font-size:0.81rem;font-weight:700;color:#166534;margin-bottom:8px;">Income Bank 잔액 설정</div>
+          <div class="wb-options">
+            <div class="wb-option"><input type="radio" name="ib-type" id="ib-new" value="new" checked onchange="updateIB()"/><label for="ib-new"><span class="ib-title">🆕 신규 수령자 (2024년 1월 이후)</span><span class="ib-desc">처음 받는 경우 — $4,000 자동 적용</span></label></div>
+            <div class="wb-option"><input type="radio" name="ib-type" id="ib-existing" value="existing" onchange="updateIB()"/><label for="ib-existing"><span class="ib-title">📋 기존 수령자</span><span class="ib-desc">MyGov → Centrelink → Payment → Work Bonus에서 잔액 확인 후 입력</span></label></div>
+            <div class="wb-option"><input type="radio" name="ib-type" id="ib-ignore" value="ignore" onchange="updateIB()"/><label for="ib-ignore"><span class="ib-title">⏭ Income Bank 무시</span><span class="ib-desc">격주 $300 면제만 적용</span></label></div>
+          </div>
+          <div id="ib-custom" style="display:none;margin-bottom:10px;">
+            <div class="form-group"><label>MyGov 확인 Income Bank 잔액</label><div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="income-bank" placeholder="0" min="0" max="11800" value="0"/></div></div>
+          </div>
+          <div class="form-group" style="margin-top:8px;">
+            <label>격주 근로소득 (Fortnightly Work Income)</label>
+            <span class="hint">고용·자영업 소득만 — 임대·투자소득은 위 소득란 입력</span>
+            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="work-income" placeholder="0" min="0" value="0"/></div>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calculate()">✨ 연금 계산하기</button>
+
+        <div id="results" style="margin-top:24px;">
+          <div id="result-none" style="display:none"><div class="none-box"><h3>❌ Age Pension 수령 불가</h3><p id="none-reason"></p></div></div>
+          <div id="result-show">
+            <div class="period-toggle">
+              <button class="period-btn active" id="btn-weekly" onclick="setPeriod('weekly')">주간 (Weekly)</button>
+              <button class="period-btn" id="btn-fn" onclick="setPeriod('fortnightly')">격주 (Fortnightly)</button>
+            </div>
+            <div class="result-hero">
+              <div class="lbl">예상 Age Pension 수령액</div>
+              <div class="amount" id="hero-amount">$0.00</div>
+              <div class="plbl" id="hero-period">주간 (Weekly)</div>
+              <div class="multi-amounts">
+                <div class="mini-amt"><span>격주</span><strong id="hero-fn">$0</strong></div>
+                <div class="mini-amt"><span>월간</span><strong id="hero-monthly">$0</strong></div>
+                <div class="mini-amt"><span>연간</span><strong id="hero-annual">$0</strong></div>
+              </div>
+            </div>
+            <div class="result-grid">
+              <div class="result-item"><div class="r-label">소득 테스트 기준 연금</div><div class="r-value" id="income-pension">$0</div><div class="r-sub" id="income-sub">주간</div></div>
+              <div class="result-item"><div class="r-label">자산 테스트 기준 연금</div><div class="r-value" id="assets-pension">$0</div><div class="r-sub" id="assets-sub">주간</div></div>
+            </div>
+            <div style="background:var(--bg);border-radius:14px;padding:18px;margin-bottom:14px;">
+              <div style="font-size:0.92rem;font-weight:700;color:var(--primary);margin-bottom:14px;">📊 테스트 결과 상세</div>
+              <div class="test-block">
+                <h4>소득 테스트 (Income Test) <span class="ttag" id="income-tag">-</span></h4>
+                <div id="wb-msg" class="wb-applied" style="display:none"></div>
+                <div class="test-detail"><span>무료 한도: <strong id="income-free">$0</strong>/격주</span><span>적용 소득: <strong id="income-cur">$0</strong>/격주</span></div>
+                <div class="bar-wrap"><div class="bar" id="income-bar" style="width:0%"></div></div>
+                <div class="test-detail"><span id="income-red-txt">감액 없음</span><span>최대: <strong id="income-max">$0</strong></span></div>
+              </div>
+              <div class="test-block">
+                <h4>자산 테스트 (Assets Test) <span class="ttag" id="assets-tag">-</span></h4>
+                <div class="test-detail"><span>전액 한도: <strong id="assets-free">$0</strong></span><span>보유 자산: <strong id="assets-cur">$0</strong></span></div>
+                <div class="bar-wrap"><div class="bar" id="assets-bar" style="width:0%"></div></div>
+                <div class="test-detail"><span id="assets-red-txt">감액 없음</span><span>컷오프: <strong id="assets-cutoff">$0</strong></span></div>
+              </div>
+            </div>
+            <div style="background:var(--bg);border-radius:14px;padding:18px;margin-bottom:14px;">
+              <div style="font-size:0.92rem;font-weight:700;color:var(--primary);margin-bottom:12px;">📋 연금 구성 내역 <span id="bd-period" style="font-size:0.78rem;color:var(--muted);font-weight:400;">(주간)</span></div>
+              <table class="breakdown-table">
+                <thead><tr><th>항목</th><th style="text-align:right">금액</th></tr></thead>
+                <tbody>
+                  <tr><td>기본 연금 (Base Rate)</td><td style="text-align:right" id="bd-base">$0</td></tr>
+                  <tr><td>Pension Supplement</td><td style="text-align:right" id="bd-supp">$0</td></tr>
+                  <tr><td>Energy Supplement</td><td style="text-align:right" id="bd-energy">$0</td></tr>
+                  <tr class="total-row"><td><strong>최대 연금 합계</strong></td><td style="text-align:right" id="bd-max">$0</td></tr>
+                  <tr><td>소득 테스트 감액</td><td style="text-align:right" id="bd-ired">-$0</td></tr>
+                  <tr><td>자산 테스트 감액</td><td style="text-align:right" id="bd-ared">-$0</td></tr>
+                  <tr id="wb-row" class="green-row" style="display:none"><td>Work Bonus 면제 효과</td><td style="text-align:right" id="bd-wb">$0</td></tr>
+                  <tr class="total-row"><td><strong>최종 수령 예상액</strong></td><td style="text-align:right" id="bd-final">$0</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="info-box"><strong>📌 계산 기준</strong><br/>• 소득/자산 테스트 중 <strong>더 낮은 금액</strong>이 실제 수령액<br/>• 소득 테스트: 무료한도 초과 $1당 <strong>$0.50</strong> 감액 (싱글 $218, 커플 $380/격주)<br/>• 자산 테스트: 전액한도 초과 $1,000당 격주 <strong>$3.00</strong> 감액</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 포트폴리오 배당 계산기 (공개용) ===== -->
+<div id="sec-portfolio" style="display:none">
+  <div class="main">
+    <button class="back-btn" onclick="showSection('home')">← 홈으로</button>
+    <div class="calc-panel">
+      <div class="calc-header">
+        <div class="ch-icon">💼</div>
+        <div><h2>포트폴리오 배당 계산기</h2><p>총자산 → Super/Non-Super 플랫폼 → 자산분류별 비중·배당율 → 월/연 배당 현금흐름</p></div>
+      </div>
+      <div class="calc-body">
+
+        <div style="background:#eff6ff;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:0.8rem;color:#1e40af;">
+          ① 총자산을 먼저 입력 → ② 각 플랫폼·자산분류별로 비중(%)과 배당율을 넣으면 → 매월 나오는 배당이 자동 계산됩니다. 종목명은 메모용입니다.
+        </div>
+
+        <div class="form-grid" style="margin-bottom:16px">
+          <div class="form-group">
+            <label>① 총 자산</label>
+            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="pf-total" value="500000" step="10000" min="0" oninput="pfUpdate()"></div>
+          </div>
+          <div class="form-group">
+            <label>통화 / 표시</label>
+            <div style="font-size:0.8rem;color:var(--muted);padding-top:10px">금액 단위는 자유 (AUD·USD·KRW 무관) · 비중 합계 <b id="pf-wtotal">100%</b></div>
+          </div>
+        </div>
+
+        <div class="bt-sub">② SUPER 플랫폼 <span>— 연금·SMSF 등 (은퇴전 인출 제한, 세제 혜택)</span> · 소계 <b id="pf-super-sub" style="color:var(--accent2)">$0</b></div>
+        <div id="pf-super-rows" style="margin-bottom:16px"></div>
+
+        <div class="bt-sub">② NON-SUPER 플랫폼 <span>— 일반 증권·은행 계좌 (자유 인출)</span> · 소계 <b id="pf-nonsuper-sub" style="color:var(--accent)">$0</b></div>
+        <div id="pf-nonsuper-rows" style="margin-bottom:16px"></div>
+
+        <div class="divider"></div>
+
+        <div class="bt-sub">③ 배당 현금흐름 결과</div>
+        <div class="bt-stats" id="pf-result"></div>
+
+        <div class="bt-sub" style="margin-top:16px">자산분류별 요약</div>
+        <table class="bt-table" id="pf-breakdown"></table>
+
+        <div class="warn-box" style="margin-top:16px;">
+          <strong>⚠ 참고</strong> — 배당율은 입력한 값(예상/과거 평균)을 그대로 사용합니다. 특히 커버드콜 ETF는 분배율 변동이 큽니다.
+          세금·프랭킹크레딧 미반영 (호주 SMSF 연금단계는 세율 0%). 실제 배당은 종목·시장 상황에 따라 달라집니다.
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 인출 백테스트 시뮬레이터 ===== -->
+<div id="sec-backtest" style="display:none">
+  <div class="main">
+    <button class="back-btn" onclick="showSection('home')">← 홈으로</button>
+    <div class="calc-panel">
+      <div class="calc-header">
+        <div class="ch-icon">📉</div>
+        <div><h2>SMSF 인출 백테스트 시뮬레이터</h2><p>배당조정종가 실데이터 · 순차매도 룰: SCHD → JEPQ → VAS → QLD · 리밸런싱 없음(비중 드리프트)</p></div>
+      </div>
+      <div class="calc-body">
+
+        <div style="background:#eff6ff;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:0.78rem;color:#1e40af;">
+          ⓘ <b>점선 밑줄</b> 용어는 마우스를 올리면 <b>?</b> 커서로 바뀌며, <b>클릭하면 상세 설명 풍선</b>이 나옵니다 — 예: <span class="bt-term" data-bt-term="MDD">MDD</span>, <span class="bt-term" data-bt-term="P10">P10</span>, <span class="bt-term" data-bt-term="롤링">롤링</span>
+        </div>
+
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="form-group">
+            <label>① 초기 투자금</label>
+            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="bt-initial" value="170000" step="10000" min="1000"></div>
+          </div>
+        </div>
+
+        <div class="bt-sub">② 포트폴리오 비중 · <span class="bt-term" data-bt-term="분배율">배당율</span> <span>— 비중 합계 <b id="bt-wtotal">100%</b> 자동 유지 · 배당율은 실제 값으로 직접 수정하세요</span></div>
+        <div id="bt-weights" style="margin-bottom:12px"></div>
+
+        <div class="bt-sub" style="margin-top:14px">③ 배당 현금흐름 <span>— 초기투자금 × 가중평균 배당율 · <b>세전 기준</b> (세금 미반영: SMSF 연금단계(ABP)는 0%라 동일, 적립단계는 15% 별도)</span></div>
+        <div class="bt-stats" id="bt-divStats"></div>
+
+        <div class="divider"></div>
+
+        <div class="bt-sub">④ 인출 방식</div>
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="form-group">
+            <label>시뮬레이션 인출 방식</label>
+            <select class="bt-select" id="bt-mode">
+              <option value="div" selected>배당 현금흐름 — 매도 없음, 실제 분배금만 수령</option>
+              <option value="sell">자가배당 — 매달 고정 금액을 매도로 인출</option>
+            </select>
+            <div class="hint" id="bt-modeHint"></div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>월 인출액 (<span class="bt-term" data-bt-term="자가배당">자가배당</span> 모드 전용) <span class="hint" id="bt-rateHint"></span></label>
+            <div style="display:flex;gap:8px;">
+              <select class="bt-select" id="bt-wmode" style="width:112px;flex-shrink:0;">
+                <option value="manual">직접 입력</option>
+                <option value="0.04">연 4%</option><option value="0.05">연 5%</option>
+                <option value="0.06">연 6%</option><option value="0.08">연 8%</option>
+                <option value="0.10">연 10%</option><option value="0.12">연 12%</option>
+              </select>
+              <div class="input-wrap" style="flex:1"><span class="input-prefix">$</span><input type="number" id="bt-monthly" value="1133" step="100" min="0"></div>
+            </div>
+            <div class="hint">% 선택 시 초기투자금 기준 월액 자동 계산 · "직접 입력"이면 금액 수정 가능</div>
+          </div>
+          <div class="form-group">
+            <label>연 인출 증가율 (물가 반영)</label>
+            <div class="input-wrap"><input type="number" id="bt-infl" value="0" step="0.5" min="0" max="10" style="padding-left:12px"><span class="input-suffix">%/년</span></div>
+            <div class="hint">매년 인출액을 이만큼 증액 · 0이면 지금처럼 고정 금액</div>
+          </div>
+          <div class="form-group">
+            <label>시작 시점</label>
+            <select class="bt-select" id="bt-startMonth"></select>
+            <div class="hint">종목별 데이터 시작: QLD 2006-06 · VAS 2009-05 · SCHD 2011-10 · JEPQ 2022-05 — 비중을 준 종목 중 가장 늦은 상장일부터 선택됩니다</div>
+          </div>
+          <div class="form-group">
+            <label>시뮬레이션 기간</label>
+            <select class="bt-select" id="bt-horizon">
+              <option value="3" selected>3년</option><option value="5">5년</option>
+              <option value="7">7년</option><option value="10">10년</option>
+              <option value="15">15년</option><option value="0">데이터 끝까지</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="bt-sub">단일 경로 결과 <span id="bt-pathRange"></span></div>
+        <div class="bt-stats" id="bt-pathStats"></div>
+        <div class="bt-chart" id="bt-chart"></div>
+        <div class="bt-legend">
+          <span><span class="bt-dot" style="background:#0984e3"></span>포트폴리오 평가액</span>
+          <span><span class="bt-dot" style="background:#00b894"></span>누적 인출액 / 누적 분배금</span>
+          <span style="color:#b91c1c">▨ 붉은 음영 = 폭락장 (GFC·미중무역전쟁·COVID·2022긴축·관세전쟁·이란)</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="bt-sub"><span class="bt-term" data-bt-term="롤링">롤링 백테스트</span> (시작월 전수 이동) <span id="bt-rollInfo"></span></div>
+        <div class="bt-stats" id="bt-rollStats"></div>
+        <div class="bt-chart" id="bt-rollChart"></div>
+        <div class="bt-legend">
+          <span><span class="bt-dot" style="background:#0984e3"></span>시작월별 최종평가액</span>
+          <span><span class="bt-dot" style="background:#dc2626"></span>고갈 경로</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="bt-sub">인출률 매트릭스 <span>— 현재 비중·기간 기준, 초기투자금 대비 연율</span></div>
+        <table class="bt-table" id="bt-matrix"></table>
+
+        <div class="warn-box" style="margin-top:16px;">
+          <strong>⚠ 해석 주의</strong> <span style="font-size:0.78rem;">(점선 밑줄 용어를 클릭하면 설명이 나옵니다)</span><br/>
+          · 차트의 붉은 음영은 데이터 구간(2006~) 내 주요 폭락장: <span class="bt-term" data-bt-term="GFC">GFC</span>(2007–09) · 미중 무역전쟁(2018) · COVID(2020) · 2022 긴축 · 관세전쟁(2025) · 이란 전쟁(2026) — 은퇴자는 이 구간을 지나는 경로 기준으로 보수적으로 판단하세요<br/>
+          · JEPQ는 2022-05 상장 — 비중을 주면 백테스트 구간이 2022-05 이후로 제한됩니다 (강세장 표본 편향)<br/>
+          · 자가배당 모드 가격은 <span class="bt-term" data-bt-term="배당조정종가">배당조정종가</span>(총수익), <span class="bt-term" data-bt-term="배당 현금흐름">배당 현금흐름</span> 모드는 미조정 주가 + 실제 분배금 · 인출은 <span class="bt-term" data-bt-term="순차매도">순차매도</span> 룰 · 리밸런싱 없음(<span class="bt-term" data-bt-term="드리프트">드리프트</span>)<br/>
+          · 세금·프랭킹크레딧 미반영 (분배금은 세전 — SMSF 연금단계는 세율 0%로 사실상 동일) · GPIQ·QQQI는 역사가 짧아 미포함(JEPQ로 근사) · AUD/USD 환율 미반영 · 과거 수익률은 미래를 보장하지 않음
+        </div>
+
+        <details style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 16px;">
+          <summary style="cursor:pointer;font-weight:700;color:var(--primary);font-size:0.9rem;">📜 역대 주요 폭락장 참고표 (1929~2026, 18건)</summary>
+          <div class="hint" style="margin:8px 0 6px">차트 음영은 QLD 데이터가 있는 2006년 이후 사건만 표시됩니다. 그 이전 사건(대공황·닷컴버블 등)은 아래 표로 참고하세요. S&amp;P500 기준(1957년 이전 다우), 하락폭은 종가 기준 근사치.</div>
+          <table class="bt-table">
+            <tr><th>시기</th><th>명칭 / 원인</th><th>하락폭</th><th>기간</th><th>회복 소요</th></tr>
+            <tr><td>1929–32</td><td>대공황</td><td>-89% (다우)</td><td>34개월</td><td>25년</td></tr>
+            <tr><td>1937–38</td><td>대공황 2차 침체</td><td>-49%</td><td>13개월</td><td>약 9년</td></tr>
+            <tr><td>1961–62</td><td>케네디 슬라이드</td><td>-28%</td><td>6개월</td><td>14개월</td></tr>
+            <tr><td>1968–70</td><td>인플레이션·긴축</td><td>-36%</td><td>18개월</td><td>21개월</td></tr>
+            <tr><td>1973–74</td><td>1차 오일쇼크·닉슨쇼크</td><td>-48%</td><td>21개월</td><td>약 7.5년</td></tr>
+            <tr><td>1980–82</td><td>볼커 긴축·더블딥</td><td>-27%</td><td>20개월</td><td>3개월</td></tr>
+            <tr><td>1987</td><td>블랙 먼데이 (하루 -22.6%)</td><td>-34%</td><td>3개월</td><td>약 2년</td></tr>
+            <tr><td>1990</td><td>걸프전·S&amp;L 위기</td><td>-20%</td><td>3개월</td><td>7개월</td></tr>
+            <tr><td>1998</td><td>아시아 외환위기·LTCM</td><td>-19%</td><td>3개월</td><td>2개월</td></tr>
+            <tr><td>2000–02</td><td>닷컴 버블 붕괴</td><td>-49% (나스닥 -78%)</td><td>31개월</td><td>7년 (나스닥 15년)</td></tr>
+            <tr><td>2007–09</td><td><span class="bt-term" data-bt-term="GFC">GFC</span> — 리먼 파산</td><td>-57% (QLD -81%)</td><td>17개월</td><td>약 5.5년</td></tr>
+            <tr><td>2011</td><td>미 신용등급 강등·유럽 재정위기</td><td>-19% (QLD -31%)</td><td>5개월</td><td>5개월</td></tr>
+            <tr><td>2015–16</td><td>위안화 절하·유가 폭락</td><td>-14% (QLD -31%)</td><td>6개월</td><td>5개월</td></tr>
+            <tr><td>2018</td><td>Fed 긴축 + 미중 무역전쟁 1차</td><td>-19.8% (QLD -42%)</td><td>3개월</td><td>4개월</td></tr>
+            <tr><td>2020</td><td>COVID 팬데믹 (역대 최속)</td><td>-34% (QLD -60%)</td><td>1개월</td><td>5개월</td></tr>
+            <tr><td>2022</td><td>인플레이션·금리인상</td><td>-25% (QLD -60%)</td><td>9개월</td><td>약 2년</td></tr>
+            <tr><td>2025</td><td>트럼프 관세전쟁</td><td>-19% (QLD -42%)</td><td>2개월</td><td>수개월</td></tr>
+            <tr><td>2026</td><td>이란 전쟁·에너지 급등</td><td>-9% (QLD -23%)</td><td>1개월</td><td>수개월</td></tr>
+          </table>
+          <div class="hint" style="margin-top:8px">
+            핵심 패턴: 20%+ 베어마켓은 평균 6~7년에 한 번, 10% 조정은 거의 매년 ·
+            이벤트성 폭락(1987·1998·2020·2025)은 수개월 내 V자 회복, 구조적 폭락(1929·2000·2008)은 5~25년 ·
+            나스닥은 항상 더 깊음 — QLD(2배 레버리지) 환산 시 2000년형 시나리오는 -95% 이상, 2022년형은 -60%대.
+            QLD 하락폭은 실제 데이터 기준(2006년 이후), 그 이전은 지수 기준.
+          </div>
+        </details>
+
+      </div>
+    </div>
+
+    <div class="calc-panel" style="margin-top:20px">
+      <div class="calc-header">
+        <div class="ch-icon">⚔</div>
+        <div><h2>전략 비교 — QLD · QLD+SCHD 인출 조합</h2><p>같은 인출 조건에서 비중 조합별 성과 곡선을 겹쳐 비교 · 순차매도(SCHD 우선) 동일 적용</p></div>
+      </div>
+      <div class="calc-body">
+
+        <div class="bt-sub">비교할 전략 <span>— 체크한 조합만 그래프·표에 표시</span></div>
+        <div id="cmp-checks" style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px;font-size:0.85rem;"></div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>초기 투자금</label>
+            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="cmp-initial" value="170000" step="10000" min="1000"></div>
+          </div>
+          <div class="form-group">
+            <label>월 인출액 <span class="hint" id="cmp-rateHint"></span></label>
+            <div style="display:flex;gap:8px;">
+              <select class="bt-select" id="cmp-wmode" style="width:112px;flex-shrink:0;">
+                <option value="manual">직접 입력</option>
+                <option value="0.04">연 4%</option><option value="0.05">연 5%</option>
+                <option value="0.06">연 6%</option><option value="0.08">연 8%</option>
+                <option value="0.10">연 10%</option><option value="0.12">연 12%</option>
+              </select>
+              <div class="input-wrap" style="flex:1"><span class="input-prefix">$</span><input type="number" id="cmp-monthly" value="1133" step="100" min="0"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>연 인출 증가율 (물가 반영)</label>
+            <div class="input-wrap"><input type="number" id="cmp-infl" value="0" step="0.5" min="0" max="10" style="padding-left:12px"><span class="input-suffix">%/년</span></div>
+            <div class="hint">매년 인출액 증액 · 0 = 고정</div>
+          </div>
+          <div class="form-group">
+            <label>시작 시점</label>
+            <select class="bt-select" id="cmp-start"></select>
+          </div>
+          <div class="form-group">
+            <label>기간 / 스케일</label>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <select class="bt-select" id="cmp-horizon" style="flex:1">
+                <option value="5">5년</option><option value="10" selected>10년</option>
+                <option value="15">15년</option><option value="0">데이터 끝까지</option>
+              </select>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.8rem;color:var(--muted);white-space:nowrap;cursor:pointer;">
+                <input type="checkbox" id="cmp-log" checked> <span class="bt-term" data-bt-term="로그 스케일">로그</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="bt-sub">성과 곡선 <span id="cmp-range"></span></div>
+        <div class="bt-chart" id="cmp-chart"></div>
+        <div class="bt-legend" id="cmp-legend"></div>
+
+        <div class="divider"></div>
+
+        <div class="bt-sub">전략별 요약 <span>— 위: 선택한 시작월 단일 경로 · 고갈확률은 시작월 전수 롤링</span></div>
+        <table class="bt-table" id="cmp-table"></table>
+        <div class="hint" style="margin-top:6px">'—' 표시는 기간이 "데이터 끝까지"이거나 해당 조합의 데이터가 기간보다 짧아 <span class="bt-term" data-bt-term="롤링">롤링</span> 계산이 불가한 경우입니다 — 기간을 5/10/15년으로 고정하면 채워집니다</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>호주 은퇴 재정 도구</strong> — 노령연금 · 포트폴리오 배당 · 인출 백테스트<br/>
+  2026년 3월 기준 Services Australia 공식 요율 적용 | 교육·참고용이며 개인 금융조언이 아닙니다 · 정확한 수령액은 Centrelink에 문의하세요
+</footer>
+
+<script>
+// ===== 상수 =====
+const RATES = {
+  single: { base:1100.30, supplement:86.50, energy:14.10, incomeFree:218, taper:0.50,
+            assetsOwner:321500, assetsNonOwner:579500, cutoffOwner:722000, cutoffNonOwner:980000 },
+  couple: { base:829.40, supplement:65.20, energy:10.60, incomeFree:380, taper:0.25,
+            assetsOwner:481500, assetsNonOwner:739500, cutoffOwner:1085000, cutoffNonOwner:1343000 }
+};
+
+// ===== 공통 유틸 =====
+const SECTIONS = ['home','pension','portfolio','backtest'];
+function fmt(n){return '$'+Math.max(0,n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function fmtI(n){return '$'+Math.round(Math.max(0,n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function fmtK(n){return '$'+Math.round(n/1000)+'K';}
+// ===== 포트폴리오 배당 계산기 (공개용) =====
+const PF_CLASSES = [
+  { key:'cc',   name:'커버드콜 ETF', color:'#0984e3', hint:'JEPQ, QYLD, GPIQ 등', yield:9.0 },
+  { key:'div',  name:'배당주',        color:'#00b894', hint:'SCHD, VHY, VAS 등',   yield:4.0 },
+  { key:'ind',  name:'개별주',        color:'#6c5ce7', hint:'개별 종목',        yield:2.0 },
+  { key:'idx',  name:'지수투자',    color:'#e17055', hint:'QLD, IVV, NDQ 등',   yield:1.0 },
+  { key:'cash', name:'현금 / 예비',  color:'#b2bec3', hint:'SGOV, 예금 등',    yield:4.0 },
+];
+const PF_PLATFORMS = [
+  { pf:'super',    label:'SUPER',     defW:{cc:25,div:15,ind:0, idx:15,cash:5} },
+  { pf:'nonsuper', label:'NON-SUPER', defW:{cc:10,div:15,ind:5, idx:5, cash:5} },
+];
+let pfReady = false;
+
+function pfRows(pf, defW){
+  let h = '<table class="bt-wtable" style="width:100%"><tr>'
+    + '<th style="text-align:left">자산분류</th><th>비중 %</th><th>금액</th>'
+    + '<th style="text-align:left">종목 (메모)</th><th>배당율 %/년</th></tr>';
+  PF_CLASSES.forEach(cl=>{
+    h += '<tr>'
+      + `<td style="text-align:left"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${cl.color};margin-right:6px"></span><b>${cl.name}</b><div class="hint" style="margin-left:16px">${cl.hint}</div></td>`
+      + `<td><input type="number" min="0" max="100" step="5" value="${defW[cl.key]}" id="pf-${pf}-w-${cl.key}" oninput="pfUpdate()"></td>`
+      + `<td id="pf-${pf}-amt-${cl.key}" style="font-weight:700;color:var(--accent2);font-variant-numeric:tabular-nums"></td>`
+      + `<td style="text-align:left"><input type="text" placeholder="예: JEPQ" id="pf-${pf}-tk-${cl.key}" style="width:130px;text-align:left"></td>`
+      + `<td><input type="number" min="0" max="30" step="0.1" value="${cl.yield}" id="pf-${pf}-y-${cl.key}" oninput="pfUpdate()"></td>`
+      + '</tr>';
+  });
+  return h + '</table>';
+}
+
+function pfUpdate(){
+  const total = +document.getElementById('pf-total').value || 0;
+  let grandW = 0, grandDiv = 0, wYieldNum = 0;
+  const byClass = {};
+  PF_CLASSES.forEach(cl => byClass[cl.key] = { amt:0, div:0 });
+  const pfSub = {};
+  PF_PLATFORMS.forEach(pl => {
+    let sub = 0;
+    PF_CLASSES.forEach(cl => {
+      const w = (+document.getElementById(`pf-${pl.pf}-w-${cl.key}`).value || 0);
+      const y = (+document.getElementById(`pf-${pl.pf}-y-${cl.key}`).value || 0);
+      const amt = total * w / 100;
+      const dv = amt * y / 100;
+      document.getElementById(`pf-${pl.pf}-amt-${cl.key}`).textContent = w>0 ? '$'+Math.round(amt).toLocaleString() : '—';
+      grandW += w; sub += amt; grandDiv += dv; wYieldNum += amt * y;
+      byClass[cl.key].amt += amt; byClass[cl.key].div += dv;
+    });
+    pfSub[pl.pf] = sub;
+  });
+  document.getElementById('pf-super-sub').textContent = '$'+Math.round(pfSub.super||0).toLocaleString();
+  document.getElementById('pf-nonsuper-sub').textContent = '$'+Math.round(pfSub.nonsuper||0).toLocaleString();
+  const wt = document.getElementById('pf-wtotal');
+  wt.textContent = Math.round(grandW)+'%';
+  wt.style.color = Math.abs(grandW-100)<1 ? 'var(--accent)' : '#dc2626';
+  const invested = total * grandW / 100;
+  const wYield = invested>0 ? wYieldNum/invested : 0;
+  const fk = x => '$'+Math.round(x).toLocaleString();
+  document.getElementById('pf-result').innerHTML =
+    `<div class="bt-stat"><div class="k">가중평균 배당율</div><div class="v bt-good">${wYield.toFixed(2)}%/년</div></div>`
+    + `<div class="bt-stat"><div class="k">연 배당</div><div class="v">${fk(grandDiv)}</div></div>`
+    + `<div class="bt-stat"><div class="k">월 배당</div><div class="v">${fk(grandDiv/12)}</div></div>`
+    + `<div class="bt-stat"><div class="k">주 배당</div><div class="v">${fk(grandDiv/52)}</div></div>`
+    + `<div class="bt-stat"><div class="k">비중 합계</div><div class="v ${Math.abs(grandW-100)<1?'bt-good':'bt-bad'}">${Math.round(grandW)}%</div></div>`;
+  let bd = '<tr><th style="text-align:left">자산분류</th><th>금액</th><th>비중</th><th>연 배당</th></tr>';
+  PF_CLASSES.forEach(cl => {
+    const b = byClass[cl.key];
+    if(b.amt<=0) return;
+    bd += `<tr><td style="text-align:left"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${cl.color};margin-right:5px"></span>${cl.name}</td>`
+      + `<td>${fk(b.amt)}</td><td>${total>0?(b.amt/total*100).toFixed(0):0}%</td><td>${fk(b.div)}</td></tr>`;
+  });
+  document.getElementById('pf-breakdown').innerHTML = bd;
+}
+
+function initPortfolio(){
+  if(pfReady) return;
+  pfReady = true;
+  document.getElementById('pf-super-rows').innerHTML = pfRows('super', PF_PLATFORMS[0].defW);
+  document.getElementById('pf-nonsuper-rows').innerHTML = pfRows('nonsuper', PF_PLATFORMS[1].defW);
+  pfUpdate();
+}
+
+function showComma(id){
+  const v=parseFloat(document.getElementById(id).value)||0;
+  const el=document.getElementById(id+'-comma');
+  if(!el)return;
+  el.textContent=v>0?'= '+fmtI(v):'';
+}
+function d(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+
+function showSection(s){
+  SECTIONS.forEach(sec=>{
+    const el=document.getElementById('sec-'+sec);
+    if(el) el.style.display=(sec===s)?'':'none';
+  });
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.sec===s);
+  });
+  if(s==='portfolio') initPortfolio();
+  if(s==='backtest') initBT();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ===== 기존 노령연금 계산기 =====
+let period='weekly', lastFn=0, lastIPFn=0, lastAPFn=0, lastMaxFn=0, lastIRedFn=0, lastARedFn=0, lastIsCouple=false;
+
+function updateIB(){
+  document.getElementById('ib-custom').style.display=
+    document.querySelector('input[name="ib-type"]:checked').value==='existing'?'block':'none';
+}
+function getIB(){
+  const t=document.querySelector('input[name="ib-type"]:checked').value;
+  if(t==='new') return 4000;
+  if(t==='ignore') return 0;
+  return Math.min(parseFloat(document.getElementById('income-bank').value)||0,11800);
+}
+function setPeriod(p){
+  period=p;
+  document.getElementById('btn-weekly').classList.toggle('active',p==='weekly');
+  document.getElementById('btn-fn').classList.toggle('active',p==='fortnightly');
+  refreshDisplay();
+}
+function toD(fn){return period==='weekly'?fn/2:fn;}
+function refreshDisplay(){
+  const r=lastIsCouple?RATES.couple:RATES.single;
+  const lbl=period==='weekly'?'주간 (Weekly)':'격주 (Fortnightly)';
+  const sub=period==='weekly'?'주간':'격주';
+  d('hero-amount',fmt(toD(lastFn))); d('hero-period',lbl);
+  d('hero-fn',fmt(lastFn)); d('hero-monthly',fmtI(lastFn*26/12)); d('hero-annual',fmtI(lastFn*26));
+  d('income-pension',fmt(toD(lastIPFn))); d('assets-pension',fmt(toD(lastAPFn)));
+  document.getElementById('income-sub').textContent=sub;
+  document.getElementById('assets-sub').textContent=sub;
+  d('bd-period','('+sub+')');
+  d('bd-base',fmt(toD(r.base))); d('bd-supp',fmt(toD(r.supplement))); d('bd-energy',fmt(toD(r.energy)));
+  d('bd-max',fmt(toD(lastMaxFn)));
+  d('bd-ired',lastIRedFn>0?'-'+fmt(toD(lastIRedFn)):'$0.00');
+  d('bd-ared',lastARedFn>0?'-'+fmt(toD(lastARedFn)):'$0.00');
+  d('bd-final',fmt(toD(lastFn)));
+}
+function calculate(){
+  const isCouple=document.querySelector('input[name="status"]:checked').value==='couple';
+  const isOwner=document.querySelector('input[name="homeowner"]:checked').value==='yes';
+  const otherIncome=parseFloat(document.getElementById('income').value)||0;
+  const workIncome=parseFloat(document.getElementById('work-income').value)||0;
+  const ib=getIB();
+  const assets=parseFloat(document.getElementById('assets').value)||0;
+  const r=isCouple?RATES.couple:RATES.single;
+  lastIsCouple=isCouple;
+  const maxFn=r.base+r.supplement+r.energy;
+  let wbExempt=0,wbBankUsed=0,assessableWork=workIncome;
+  if(workIncome>0){const afterReg=Math.max(0,workIncome-300);wbBankUsed=Math.min(afterReg,ib);assessableWork=Math.max(0,afterReg-wbBankUsed);wbExempt=workIncome-assessableWork;}
+  const totalIncome=otherIncome+assessableWork;
+  let iRed=0;
+  if(totalIncome>r.incomeFree) iRed=(totalIncome-r.incomeFree)*r.taper;
+  const iPension=Math.max(0,maxFn-iRed);
+  const aFree=isOwner?r.assetsOwner:r.assetsNonOwner;
+  const aCutoff=isOwner?r.cutoffOwner:r.cutoffNonOwner;
+  let aRed=0;
+  if(assets>aFree) aRed=Math.floor((assets-aFree)/1000)*3;
+  const aPension=Math.max(0,maxFn-aRed);
+  const finalFn=Math.min(iPension,aPension);
+  const limiting=iPension<=aPension?'income':'assets';
+  lastFn=finalFn; lastIPFn=iPension; lastAPFn=aPension;
+  lastMaxFn=maxFn; lastIRedFn=iRed; lastARedFn=aRed;
+  document.getElementById('results').style.display='block';
+  if(finalFn<=0){
+    document.getElementById('result-none').style.display='block';
+    document.getElementById('result-show').style.display='none';
+    d('none-reason',iPension<=0?`소득 ${fmt(totalIncome)}/격주가 한도 초과`:`자산 ${fmtI(assets)}이 컷오프 ${fmtI(aCutoff)} 초과`);
+    return;
+  }
+  document.getElementById('result-none').style.display='none';
+  document.getElementById('result-show').style.display='block';
+  const wbMsg=document.getElementById('wb-msg');
+  const wbRow=document.getElementById('wb-row');
+  if(workIncome>0){
+    wbMsg.style.display='block';
+    wbMsg.innerHTML=`✅ Work Bonus 적용: ${fmt(workIncome)} 중 <strong>${fmt(wbExempt)}</strong> 면제 (정기 ${fmt(Math.min(workIncome,300))}${wbBankUsed>0?' + Income Bank '+fmt(wbBankUsed):''})`;
+    wbRow.style.display=''; d('bd-wb',fmt(toD(wbExempt*r.taper)));
+  } else { wbMsg.style.display='none'; wbRow.style.display='none'; }
+  d('income-free',fmt(r.incomeFree)); d('income-cur',fmt(totalIncome)); d('income-max',fmt(maxFn));
+  const iBar=document.getElementById('income-bar');
+  iBar.style.width=Math.min(100,(totalIncome/(r.incomeFree*8))*100)+'%';
+  iBar.className='bar '+(totalIncome<=r.incomeFree?'bar-green':totalIncome<r.incomeFree*4?'bar-orange':'bar-red');
+  d('income-red-txt',iRed>0?`격주 ${fmt(iRed)} 감액`:'감액 없음 ✓');
+  const iTag=document.getElementById('income-tag');
+  iTag.textContent=limiting==='income'&&iPension<maxFn?'⚠ 제한 요인':iPension>=maxFn?'✓ 전액 통과':'감액됨';
+  iTag.className='ttag '+(limiting==='income'&&iPension<maxFn?'ttag-income':iPension>=maxFn?'ttag-full':'ttag-income');
+  d('assets-free',fmtI(aFree)); d('assets-cur',fmtI(assets)); d('assets-cutoff',fmtI(aCutoff));
+  const aBar=document.getElementById('assets-bar');
+  aBar.style.width=Math.min(100,(assets/aCutoff)*100)+'%';
+  aBar.className='bar '+(assets<=aFree?'bar-green':assets<aCutoff*0.7?'bar-orange':'bar-red');
+  d('assets-red-txt',aRed>0?`격주 ${fmt(aRed)} 감액`:'감액 없음 ✓');
+  const aTag=document.getElementById('assets-tag');
+  aTag.textContent=limiting==='assets'&&aPension<maxFn?'⚠ 제한 요인':aPension>=maxFn?'✓ 전액 통과':'감액됨';
+  aTag.className='ttag '+(limiting==='assets'&&aPension<maxFn?'ttag-assets':aPension>=maxFn?'ttag-full':'ttag-assets');
+  refreshDisplay();
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ===== 자산 최적화 엔진 =====
+// 주기 → 격주 변환
+function toFn(v, freq){
+  if(freq==='w') return v*2;
+  if(freq==='fn') return v;
+  if(freq==='m') return v*12/26;
+  if(freq==='y') return v/26;
+  return v;
+}
+function getIncomeFn(id){
+  const v = parseFloat(document.getElementById(id).value)||0;
+  const freq = document.getElementById(id+'-freq').value;
+  return toFn(v, freq);
+}
+function showFnConvert(id){
+  const v = parseFloat(document.getElementById(id).value)||0;
+  const freq = document.getElementById(id+'-freq').value;
+  const preview = document.getElementById(id+'-preview');
+  if(!preview) return;
+  if(v===0 || freq==='fn'){ preview.textContent=''; return; }
+  const fn = toFn(v, freq);
+  const labels = {w:'주간→',m:'월간→',y:'연간→'};
+  preview.textContent = (labels[freq]||'') + ' 격주 $'+fn.toFixed(2) + ' | 월 $'+(fn*26/12).toFixed(0) + ' | 연 $'+(fn*26).toFixed(0);
+}
+
+function calcDeeming(financialAssets, isCouple){
+  const threshold = isCouple ? 106200 : 64200;
+  const low = Math.min(financialAssets, threshold);
+  const high = Math.max(0, financialAssets - threshold);
+  const annualDeeming = low * 0.0125 + high * 0.0325;
+  return annualDeeming / 26; // per fortnight
+}
+
+function calcPension(totalAssets, totalIncomeFn, isCouple, isOwner){
+  const r = RATES[isCouple ? 'couple' : 'single'];
+  const maxFn = r.base + r.supplement + r.energy;
+  const iRed = Math.max(0, (totalIncomeFn - r.incomeFree) * r.taper);
+  const iPension = Math.max(0, maxFn - iRed);
+  const aFree = isOwner ? r.assetsOwner : r.assetsNonOwner;
+  const aCutoff = isOwner ? r.cutoffOwner : r.cutoffNonOwner;
+  const aRed = totalAssets > aFree ? Math.floor((totalAssets - aFree) / 1000) * 3 : 0;
+  const aPension = Math.max(0, maxFn - aRed);
+  const finalFn = Math.min(iPension, aPension);
+  return { finalFn, iPension, aPension, iRed, aRed, maxFn, aFree, aCutoff, limiting: iPension <= aPension ? 'income' : 'assets' };
+}
+
+// ===== 초기화 =====
+// (공개용: 개인 D-Day 초기화 제거됨)
+
+// ===== 인출 백테스트 시뮬레이터 =====
+const BT_DATA = {"QLD":{"months":["2006-06","2006-07","2006-08","2006-09","2006-10","2006-11","2006-12","2007-01","2007-02","2007-03","2007-04","2007-05","2007-06","2007-07","2007-08","2007-09","2007-10","2007-11","2007-12","2008-01","2008-02","2008-03","2008-04","2008-05","2008-06","2008-07","2008-08","2008-09","2008-10","2008-11","2008-12","2009-01","2009-02","2009-03","2009-04","2009-05","2009-06","2009-07","2009-08","2009-09","2009-10","2009-11","2009-12","2010-01","2010-02","2010-03","2010-04","2010-05","2010-06","2010-07","2010-08","2010-09","2010-10","2010-11","2010-12","2011-01","2011-02","2011-03","2011-04","2011-05","2011-06","2011-07","2011-08","2011-09","2011-10","2011-11","2011-12","2012-01","2012-02","2012-03","2012-04","2012-05","2012-06","2012-07","2012-08","2012-09","2012-10","2012-11","2012-12","2013-01","2013-02","2013-03","2013-04","2013-05","2013-06","2013-07","2013-08","2013-09","2013-10","2013-11","2013-12","2014-01","2014-02","2014-03","2014-04","2014-05","2014-06","2014-07","2014-08","2014-09","2014-10","2014-11","2014-12","2015-01","2015-02","2015-03","2015-04","2015-05","2015-06","2015-07","2015-08","2015-09","2015-10","2015-11","2015-12","2016-01","2016-02","2016-03","2016-04","2016-05","2016-06","2016-07","2016-08","2016-09","2016-10","2016-11","2016-12","2017-01","2017-02","2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12","2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12","2020-01","2020-02","2020-03","2020-04","2020-05","2020-06","2020-07","2020-08","2020-09","2020-10","2020-11","2020-12","2021-01","2021-02","2021-03","2021-04","2021-05","2021-06","2021-07","2021-08","2021-09","2021-10","2021-11","2021-12","2022-01","2022-02","2022-03","2022-04","2022-05","2022-06","2022-07","2022-08","2022-09","2022-10","2022-11","2022-12","2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"],"prices":[0.9827,0.8943,0.9752,1.0596,1.1548,1.2244,1.1735,1.2084,1.1655,1.1728,1.2955,1.3717,1.3777,1.3614,1.4183,1.5656,1.7737,1.5274,1.5142,1.1454,1.0491,1.0675,1.2339,1.3811,1.1199,1.1248,1.1463,0.7997,0.531,0.4037,0.4105,0.3867,0.3438,0.4124,0.5209,0.5512,0.5817,0.6806,0.6988,0.7782,0.7283,0.8202,0.9081,0.7899,0.8623,0.9991,1.0412,0.8823,0.7725,0.8846,0.7942,1.0121,1.1431,1.1335,1.2432,1.3115,1.3929,1.3736,1.4529,1.4115,1.3501,1.391,1.2293,1.1138,1.3477,1.2643,1.2437,1.4585,1.6497,1.8161,1.7694,1.5228,1.6257,1.6523,1.8281,1.8575,1.6602,1.7002,1.6761,1.7651,1.7737,1.8814,1.9691,2.1092,2.0001,2.2612,2.2376,2.4515,2.6982,2.8845,3.0525,2.9281,3.2284,3.0479,3.0148,3.2857,3.4903,3.5633,3.925,3.8593,4.0416,4.413,4.1999,4.0172,4.6091,4.3807,4.5378,4.7387,4.496,4.8967,4.2108,3.9981,4.9502,4.9975,4.819,4.1401,3.99,4.5386,4.241,4.6087,4.3787,5.018,5.114,5.3251,5.162,5.1916,5.3028,5.8477,6.36,6.6056,6.9573,7.4875,7.1024,7.6851,7.9598,7.9105,8.6323,8.9526,9.0326,10.6438,10.2792,9.3862,9.4108,10.4714,10.65,11.187,12.505,12.4016,10.2004,10.0809,8.282,9.7587,10.3072,11.0928,12.2954,10.2713,11.8477,12.3586,11.7762,11.9366,12.9435,13.9838,15.0476,15.8932,14.0217,11.06,14.443,16.232,18.2346,20.9496,25.7203,22.6312,21.1125,25.8808,28.4241,28.4883,28.2834,28.9378,32.3652,31.454,35.4641,37.4346,40.5756,35.9382,41.751,43.2671,43.9635,36.4025,32.9257,35.5185,26.2734,25.0239,20.4508,25.6906,22.9003,18.1049,19.3001,21.1866,17.3557,21.0359,20.6693,24.5526,24.6368,28.3913,31.8881,34.1914,32.8292,29.4785,28.0232,34.1275,37.7871,38.881,42.779,43.5229,39.4632,44.3389,49.7099,47.5684,48.0863,50.1789,48.973,53.9211,53.9656,55.8452,52.4948,44.3249,44.1753,52.2294,58.7671,61.2933,62.0172,68.5181,74.6508,71.7243,70.3483,71.6472,67.9304,60.9592,80.9958,98.3942,96.76],"close":[1.1289,1.0273,1.1203,1.2172,1.3266,1.4066,1.2663,1.3039,1.2577,1.2653,1.3977,1.4798,1.4864,1.4688,1.5302,1.6891,1.9136,1.6478,1.5503,1.1727,1.0741,1.093,1.2633,1.4141,1.1461,1.1511,1.1731,0.8184,0.5434,0.4131,0.4202,0.3958,0.3519,0.422,0.5331,0.5641,0.5953,0.6966,0.7152,0.7964,0.7453,0.8394,0.9294,0.8084,0.8825,1.0225,1.0656,0.903,0.7906,0.9053,0.8128,1.0358,1.1698,1.16,1.2723,1.3422,1.4255,1.4058,1.4869,1.4445,1.3817,1.4236,1.2581,1.1398,1.3792,1.2939,1.2728,1.4927,1.6883,1.8586,1.8108,1.5584,1.6638,1.6909,1.8709,1.9009,1.6991,1.74,1.7128,1.8038,1.8125,1.9184,2.0078,2.1506,2.0394,2.3056,2.2816,2.4997,2.7513,2.9413,3.1125,2.9856,3.2919,3.1078,3.0741,3.3503,3.5531,3.6275,3.9956,3.9288,4.1144,4.4925,4.2731,4.0872,4.6894,4.4547,4.6144,4.8187,4.5719,4.9794,4.2819,4.0656,5.0338,5.0819,4.8975,4.2075,4.055,4.6125,4.31,4.6838,4.4475,5.0969,5.1944,5.4088,5.2431,5.2731,5.3825,5.9356,6.4556,6.7038,7.0606,7.5988,7.2075,7.7987,8.0775,8.0275,8.76,9.085,9.1663,10.8013,10.4312,9.525,9.55,10.6263,10.8075,11.3525,12.69,12.585,10.3512,10.23,8.3988,9.8962,10.4525,11.2413,12.46,10.4087,12.0013,12.5188,11.9288,12.0913,13.1112,14.165,15.2362,16.0925,14.1975,11.1975,14.6225,16.4338,18.4613,21.21,26.04,22.9125,21.375,26.2025,28.7775,28.8425,28.635,29.2975,32.7675,31.845,35.905,37.9,41.08,36.385,42.27,43.805,44.51,36.855,33.335,35.96,26.6,25.335,20.705,26.01,23.185,18.33,19.54,21.45,17.52,21.235,20.865,24.785,24.87,28.66,32.19,34.515,33.14,29.675,28.21,34.355,38.0,39.1,43.02,43.74,39.66,44.56,49.905,47.755,48.275,50.35,49.14,54.105,54.12,56.005,52.645,44.44,44.29,52.365,58.855,61.385,62.11,68.6,74.74,71.81,70.41,71.71,67.99,61.0,81.05,98.46,96.76],"div":[0.0,0.0,0.0,0.0001,0.0,0.0,0.0818,0.0001,0.0,0.0003,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0001,0.0833,0.0,0.0,0.0,0.0001,0.0,0.0006,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0001,0.0,0.0001,0.0,0.0,0.0025,0.0,0.0001,0.0042,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0,0.0001,0.0001,0.0,0.0,0.0,0.0,0.0058,0.0,0.0001,0.0,0.0,0.0,0.0025,0.0,0.0,0.0023,0.0001,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0029,0.0,0.0,0.0,0.0001,0.0,0.0026,0.0,0.0,0.0,0.0,0.0001,0.0035,0.0,0.0,0.0011,0.0001,0.0,0.0005,0.0001,0.0,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0057,0.0001,0.0,0.0079,0.0,0.0001,0.0049,0.0,0.0001,0.0,0.0,0.0,0.0064,0.0,0.0,0.0012,0.0001,0.0,0.0,0.0001,0.0,0.0,0.0,0.0001,0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0001,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0515,0.0,0.0,0.0001,0.0,0.0,0.0,0.0001,0.0,0.0826,0.0,0.0,0.039,0.0001,0.0,0.0281,0.0,0.0,0.0528,0.0001,0.0,0.0258,0.0,0.0,0.0297,0.0,0.0,0.0117,0.0,0.0,0.0647,0.0,0.0,0.0206,0.0,0.0,0.0224,0.0,0.0,0.0127,0.0,0.0,0.0647]},"SCHD":{"months":["2011-10","2011-11","2011-12","2012-01","2012-02","2012-03","2012-04","2012-05","2012-06","2012-07","2012-08","2012-09","2012-10","2012-11","2012-12","2013-01","2013-02","2013-03","2013-04","2013-05","2013-06","2013-07","2013-08","2013-09","2013-10","2013-11","2013-12","2014-01","2014-02","2014-03","2014-04","2014-05","2014-06","2014-07","2014-08","2014-09","2014-10","2014-11","2014-12","2015-01","2015-02","2015-03","2015-04","2015-05","2015-06","2015-07","2015-08","2015-09","2015-10","2015-11","2015-12","2016-01","2016-02","2016-03","2016-04","2016-05","2016-06","2016-07","2016-08","2016-09","2016-10","2016-11","2016-12","2017-01","2017-02","2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12","2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12","2020-01","2020-02","2020-03","2020-04","2020-05","2020-06","2020-07","2020-08","2020-09","2020-10","2020-11","2020-12","2021-01","2021-02","2021-03","2021-04","2021-05","2021-06","2021-07","2021-08","2021-09","2021-10","2021-11","2021-12","2022-01","2022-02","2022-03","2022-04","2022-05","2022-06","2022-07","2022-08","2022-09","2022-10","2022-11","2022-12","2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"],"prices":[5.3292,5.417,5.4976,5.5879,5.7475,5.8858,5.8795,5.6558,5.9025,6.0471,6.0832,6.1569,6.099,6.1269,6.1239,6.4631,6.5993,6.9132,7.1198,7.2198,7.1604,7.4889,7.2239,7.418,7.7884,7.9868,8.1373,7.7755,8.0773,8.2353,8.3851,8.4968,8.6123,8.4638,8.7541,8.7339,8.906,9.171,9.088,8.8052,9.2659,9.0485,9.1174,9.1633,8.8598,8.9223,8.448,8.3875,9.1224,9.1481,9.0611,8.8543,8.9201,9.4909,9.4743,9.6069,9.8871,10.1687,10.1353,10.1539,9.9955,10.3219,10.5515,10.5006,10.859,10.8745,10.9013,11.0916,11.081,11.2652,11.2628,11.5835,12.0018,12.5068,12.7511,13.3318,12.5817,12.2816,12.1439,12.3618,12.4479,13.0136,13.3116,13.477,12.6811,13.1082,12.0424,12.7705,13.2884,13.4943,13.9279,12.8697,13.8076,14.0365,13.8544,14.3804,14.5747,14.9868,15.3291,15.0592,13.6512,12.029,13.5454,14.0455,13.9564,14.6954,15.4478,15.0621,15.1193,17.1104,17.6328,17.4733,18.5317,20.1887,20.6344,21.2989,21.0872,21.2238,21.6672,20.8674,21.7865,21.3396,22.9007,22.2746,21.844,22.4978,21.571,22.4123,20.6292,21.4356,20.851,19.3048,21.4698,22.9373,22.1552,22.6157,21.8648,21.6357,21.4613,20.58,21.6745,22.5818,22.2445,21.3094,20.4963,21.7882,23.162,23.1954,23.6214,24.7221,23.606,24.0905,24.0948,25.5883,26.1925,26.4271,26.4771,27.6964,25.8626,26.3454,27.0175,26.7073,24.6632,24.9975,25.5613,25.5613,26.931,26.5852,26.0496,26.8676,26.985,29.3362,31.2546,30.4376,31.8166,32.2432,31.71],"close":[8.5,8.64,8.7267,8.87,9.1233,9.2967,9.2867,8.9333,9.2533,9.48,9.5367,9.5833,9.4933,9.5367,9.4467,9.97,10.18,10.5967,10.9133,11.0667,10.9,11.4,10.9967,11.2167,11.7767,12.0767,12.22,11.6767,12.13,12.2833,12.5067,12.6733,12.7567,12.5367,12.9667,12.8533,13.1067,13.4967,13.2833,12.87,13.5433,13.1367,13.2367,13.3033,12.7633,12.8533,12.17,11.9833,13.0333,13.07,12.8533,12.56,12.6533,13.3633,13.34,13.5267,13.8133,14.2067,14.16,14.1033,13.8833,14.3367,14.5233,14.4533,14.9467,14.86,14.8967,15.1567,15.0333,15.2833,15.28,15.6,16.1633,16.8433,17.0567,17.8333,16.83,16.3433,16.16,16.45,16.43,17.1767,17.57,17.6667,16.6233,17.1833,15.6567,16.6033,17.2767,17.4267,17.9867,16.62,17.69,17.9833,17.75,18.26,18.5067,19.03,19.3067,18.9667,17.1933,14.9933,16.8833,17.5067,17.25,18.1633,19.0933,18.4333,18.5033,20.94,21.38,21.1867,22.47,24.3067,24.8433,25.6433,25.2067,25.37,25.9,24.7467,25.8367,25.3067,26.9433,26.2067,25.7,26.2967,25.2133,26.1967,23.8767,24.81,24.1333,22.1433,24.6267,26.31,25.18,25.7033,24.85,24.3867,24.19,23.1967,24.2067,25.22,24.8433,23.5867,22.6867,24.1167,25.3767,25.4133,25.88,26.8767,25.6633,26.19,25.92,27.5267,28.1767,28.1767,28.23,29.53,27.32,27.83,28.54,27.96,25.82,26.17,26.5,26.5,27.92,27.3,26.75,27.59,27.43,29.82,31.77,30.68,32.07,32.5,31.71],"div":[0.0,0.0,0.0419,0.0,0.0,0.0461,0.0,0.0001,0.0697,0.0,0.0,0.0689,0.0,0.0,0.0853,0.0,0.0001,0.0675,0.0001,0.0,0.0757,0.0001,0.0,0.0755,0.0001,0.0,0.0843,0.0,0.0,0.084,0.0,0.0,0.0889,0.0,0.0,0.0835,0.0,0.0,0.0913,0.0,0.0001,0.0888,0.0,0.0,0.0994,0.0,0.0,0.0995,0.0,0.0,0.0924,0.0,0.0,0.0997,0.0,0.0,0.1079,0.0,0.0,0.0827,0.0,0.0,0.1323,0.0,0.0,0.108,0.0,0.0,0.1089,0.0,0.0,0.1151,0.0,0.0001,0.1156,0.0002,0.0,0.0853,0.0001,0.0,0.1346,0.0,0.0,0.1216,0.0001,0.0,0.1295,0.0,0.0,0.1177,0.0,0.0001,0.1412,0.0,0.0,0.1639,0.0,0.0,0.1579,0.0001,0.0001,0.1569,0.0001,0.0,0.1456,0.0001,0.0,0.1833,0.0,0.0,0.1993,0.0,0.0,0.1724,0.0,0.0,0.1817,0.0,0.0,0.1973,0.0,0.0,0.2147,0.0,0.0001,0.1725,0.0001,0.0,0.2358,0.0,0.0001,0.2004,0.0,0.0,0.2329,0.0001,0.0,0.2029,0.0001,0.0,0.2237,0.0,0.0,0.2123,0.0,0.0,0.2606,0.0,0.0,0.2092,0.0,0.0,0.2747,0.0,0.0,0.2524,0.0,0.0,0.2548,0.0,0.0,0.2523,0.0,0.0,0.2602,0.0,0.0,0.2615,0.0,0.0,0.2806,0.0,0.0,0.2595,0.0,0.0,0.2526]},"JEPQ":{"months":["2022-05","2022-06","2022-07","2022-08","2022-09","2022-10","2022-11","2022-12","2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"],"prices":[30.9769,29.04,31.4249,29.8112,27.1728,28.3909,29.8499,28.0312,29.7832,29.5618,31.6185,32.4217,33.8278,34.8933,35.9306,35.8837,34.6871,34.4238,37.0864,38.1977,39.3452,41.0411,42.0728,40.6866,42.7213,44.1204,43.0318,43.6673,44.8152,44.9809,47.4792,47.6896,48.6116,47.725,44.5277,44.6155,46.2755,48.403,49.4751,50.402,52.4842,54.3473,54.5197,54.9269,56.165,55.2848,53.3523,57.5352,59.9581,60.823],"close":[49.188,45.76,49.15,46.24,41.65,43.12,44.62,40.8,43.35,42.59,45.09,45.77,47.25,48.37,49.43,49.0,46.93,46.16,49.28,49.93,51.43,53.29,54.24,52.04,54.19,55.5,53.72,54.08,54.93,54.58,57.09,56.38,57.47,55.98,51.78,51.34,52.63,54.4,55.1,55.68,57.52,59.1,58.81,58.12,59.43,58.04,55.52,59.27,61.15,61.46],"div":[0.0,0.3524,0.368,0.3861,0.4976,0.3971,0.7159,1.1014,0.0001,0.4377,0.4631,0.4654,0.505,0.3683,0.3779,0.3655,0.436,0.4138,0.4504,0.8267,0.0,0.3568,0.3896,0.4129,0.4525,0.4647,0.4106,0.4333,0.5716,0.5531,0.5214,0.963,0.0,0.4418,0.4497,0.5421,0.6202,0.6496,0.5049,0.4523,0.4602,0.4619,0.4775,1.1292,0.0001,0.4586,0.4912,0.6029,0.616,0.5721]},"VAS":{"months":["2009-05","2009-06","2009-07","2009-08","2009-09","2009-10","2009-11","2009-12","2010-01","2010-02","2010-03","2010-04","2010-05","2010-06","2010-07","2010-08","2010-09","2010-10","2010-11","2010-12","2011-01","2011-02","2011-03","2011-04","2011-05","2011-06","2011-07","2011-08","2011-09","2011-10","2011-11","2011-12","2012-01","2012-02","2012-03","2012-04","2012-05","2012-06","2012-07","2012-08","2012-09","2012-10","2012-11","2012-12","2013-01","2013-02","2013-03","2013-04","2013-05","2013-06","2013-07","2013-08","2013-09","2013-10","2013-11","2013-12","2014-01","2014-02","2014-03","2014-04","2014-05","2014-06","2014-07","2014-08","2014-09","2014-10","2014-11","2014-12","2015-01","2015-02","2015-03","2015-04","2015-05","2015-06","2015-07","2015-08","2015-09","2015-10","2015-11","2015-12","2016-01","2016-02","2016-03","2016-04","2016-05","2016-06","2016-07","2016-08","2016-09","2016-10","2016-11","2016-12","2017-01","2017-02","2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12","2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12","2020-01","2020-02","2020-03","2020-04","2020-05","2020-06","2020-07","2020-08","2020-09","2020-10","2020-11","2020-12","2021-01","2021-02","2021-03","2021-04","2021-05","2021-06","2021-07","2021-08","2021-09","2021-10","2021-11","2021-12","2022-01","2022-02","2022-03","2022-04","2022-05","2022-06","2022-07","2022-08","2022-09","2022-10","2022-11","2022-12","2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06","2026-07"],"prices":[28.1235,29.1342,31.2465,33.2452,35.2893,34.1877,34.8066,36.0615,33.1997,34.5682,35.9536,35.3461,32.7682,31.7575,32.7966,32.4105,34.0401,34.4546,33.8357,35.2382,34.6931,35.4823,35.647,35.329,34.6136,33.8754,32.4446,31.6383,29.7759,31.5928,31.1556,29.9065,30.673,31.3373,31.996,32.0982,29.9065,30.162,31.1727,31.7973,33.3076,32.507,33.0351,34.1196,36.1132,37.4913,36.9378,38.299,36.7729,35.8038,37.7171,38.5299,39.7462,40.862,40.4171,40.7553,39.4815,41.8414,41.4291,42.3921,42.5616,41.9803,43.6653,43.9219,41.5575,43.3034,41.0471,42.7641,44.2916,47.35,47.001,46.4192,46.6089,44.2627,45.9598,42.4348,41.1471,43.2132,43.5431,44.0671,42.0547,41.2739,42.1433,44.2239,45.5533,44.4299,47.2565,46.5233,46.8166,45.5133,47.488,49.0299,48.9256,49.7271,51.3507,51.8477,50.371,50.5229,50.5804,50.8998,50.9137,53.243,54.0667,54.827,55.1189,54.4868,52.7539,54.7929,55.4307,57.1578,57.9035,58.7382,58.0777,54.5344,53.2018,53.1061,55.1513,58.78,59.2195,60.3254,61.2507,63.6429,65.5431,64.0162,65.3912,65.0457,67.0303,65.7303,68.85,63.4972,51.8469,54.7866,57.397,58.8785,59.2134,60.982,58.8204,59.8963,66.7715,66.9774,67.7052,69.4647,70.6809,72.2471,73.9258,75.5321,76.4069,78.427,76.9564,77.5775,76.4621,78.6273,73.9897,75.642,80.2219,79.6146,77.3963,70.6402,74.683,75.5401,70.6744,76.2986,80.6882,77.3034,82.4064,79.9793,79.8192,81.3198,79.2349,80.595,82.8896,82.2931,79.9164,77.5485,80.6299,86.5818,86.4766,88.9902,91.3373,88.6324,89.3873,90.1982,93.9171,94.3114,97.221,95.501,99.426,96.4491,100.7186,96.8414,94.6058,96.9301,101.0485,102.582,104.9888,108.3173,107.6186,108.1634,104.5763,106.7325,108.5504,112.7178,106.7493,106.8787,108.1231,108.81,108.14],"close":[49.53,51.31,55.03,58.55,62.15,60.21,61.3,63.51,58.47,60.88,63.32,62.25,57.71,55.93,57.76,57.08,59.95,60.68,59.59,62.06,61.1,62.49,62.78,62.22,60.96,59.66,57.14,55.72,52.44,55.64,54.87,52.67,54.02,55.19,56.35,56.53,52.67,53.12,54.9,56.0,58.66,57.25,58.18,60.09,62.63,65.02,64.06,66.0,63.37,61.7,64.5,65.89,67.97,68.88,68.13,68.7,65.58,69.5,68.41,70.0,70.28,69.32,71.47,71.89,68.02,69.86,66.22,68.99,70.67,75.55,74.32,73.4,73.7,69.99,72.1,66.57,64.55,66.8,67.31,68.12,64.1,62.91,63.4,66.53,68.53,66.84,70.9,69.8,70.24,67.3,70.22,72.5,71.42,72.59,74.96,75.14,73.0,73.22,72.85,73.31,73.33,75.63,76.8,77.88,77.61,76.72,74.28,76.46,77.35,79.76,79.77,80.92,80.01,74.07,72.26,72.13,74.17,79.05,78.72,80.19,81.42,84.6,86.28,84.27,86.08,84.56,87.14,85.45,88.75,81.85,66.14,69.89,73.22,75.11,75.33,77.58,74.83,75.62,84.3,84.56,85.04,87.25,88.0,89.95,92.04,94.04,94.56,97.06,95.24,94.59,93.23,95.87,89.56,91.56,95.11,94.39,91.76,83.75,86.26,87.25,81.63,86.56,91.54,87.7,92.69,89.96,89.78,90.88,88.55,90.07,91.72,91.06,88.43,84.56,87.92,94.41,93.58,96.3,98.84,95.09,95.9,96.77,100.06,100.48,103.58,100.73,104.87,101.73,105.21,101.16,98.09,100.5,104.77,106.36,108.19,111.62,110.9,110.36,106.7,108.9,109.92,114.14,107.23,107.36,108.61,109.3,108.14],"div":[0.0,0.0,0.0001,0.0,0.0,0.0,0.0,0.0001,0.0,0.0001,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.0001,0.0,0.0001,0.0,0.0,0.0,0.0,0.0001,0.0,0.0,0.0001,0.0,0.0001,0.0,0.0,0.0,0.0,0.0,0.0001,0.0,0.971,0.0,0.0001,0.4207,0.0001,0.0,0.4972,0.0,0.0,0.9981,0.0,0.0001,0.9728,0.0,0.4052,0.0002,0.0,0.0001,0.6324,0.0,0.0,1.0176,0.0,0.0,0.7843,0.0,0.6731,0.0,0.0,0.0001,0.5735,0.0001,0.0,0.9912,0.0,0.0,0.9092,0.0,0.8351,0.0,0.0,0.0,0.1923,0.0,0.0,0.9846,0.0,0.0,0.9258,0.0,0.0001,0.5455,0.0,0.0001,0.4533,0.0,0.0,1.0548,0.0,0.0,0.6846,0.0,0.0,0.691,0.0,0.0001,1.0306,0.0,0.0001,1.0586,0.0,0.0,0.7378,0.0,0.9211,0.0001,0.0,0.0,0.8459,0.0,0.0,1.0652,0.0,0.0,0.7556,0.0001,0.6924,0.0001,0.0,0.0,0.2072,0.0,0.0001,0.5787,0.0,0.0,0.4389,0.0,0.7776,0.0,0.0,0.0,0.5692,0.0,0.0,1.4187,0.0,0.0,0.6554,0.0,1.9937,0.0,0.0,0.0001,2.2831,0.0,0.0,1.566,0.0,0.0,0.7993,0.0,0.0,0.5879,0.0,0.0,0.9144,0.0,0.0001,1.2498,0.0,0.0,0.7153,0.0001,0.0,0.8229,0.0,0.0,0.6999,0.0001,0.0,1.0175,0.0,0.0001,1.0233,0.0,0.7347,0.0,0.0001,0.0,0.6654,0.0,0.0,1.1014,0.0001,0.0,0.8348,0.0,0.8662,0.0,0.0,0.0,0.487]}};
+var initBT = (function(){
+  const SELL_ORDER = ["SCHD","JEPQ","VAS","QLD"];
+  const TICKERS = ["QLD","SCHD","JEPQ","VAS"];
+  const DEFAULT_W = { QLD:20, SCHD:15, JEPQ:50, VAS:15 };
+  const DEFAULT_Y = { QLD:0.6, SCHD:3.5, JEPQ:9.5, VAS:3.9 };  // 연 분배율 % (직접 수정 가능)
+  let ready = false;
+
+  // ---- 용어 사전 (클릭하면 풍선 설명) ----
+  const GLOSSARY = {
+    'MDD': 'Max Drawdown(최대 낙폭). 기간 중 최고점 대비 가장 깊은 하락률입니다. MDD 50%면 자산이 한때 반토막 났다는 뜻. 은퇴자에게는 수익률만큼 중요한 위험 지표입니다.',
+    '롤링': '시작 시점을 한 달씩 옮겨가며 같은 조건을 수십~수백 번 반복하는 검증 방법. 특정 시작 타이밍의 운을 제거하고 전략 자체의 안정성을 평가합니다. 은퇴 시점은 고를 수 없으므로 모든 시작 시점의 분포를 봐야 합니다.',
+    'P10': '롤링 결과(수십~수백 개)를 작은 순으로 줄 세웠을 때 하위 10% 경계값. "시작 타이밍 운이 나쁜 편이었다면 이 정도로 끝난다"는 뜻입니다. 은퇴 설계는 평균이 아니라 P10 기준으로 하는 것이 안전합니다.',
+    'P90': '롤링 결과의 상위 10% 경계값. "운이 좋은 편이었다면 이 정도"라는 낙관 시나리오로, 계획 기준으로 삼으면 안 됩니다.',
+    '중앙값': '롤링 결과를 줄 세웠을 때 정확히 가운데 값. 평균과 달리 극단값에 휘둘리지 않아 "보통 운"의 결과를 나타냅니다.',
+    '고갈': '인출을 계속하다가 잔액이 0이 되어 더 이상 인출할 수 없게 되는 것. 은퇴 포트폴리오의 최악 시나리오입니다.',
+    '고갈확률': '롤링 경로 중 시뮬레이션 기간 안에 잔액이 0이 된 경로의 비율. 예: 5%면 100개 시작 시점 중 5개에서 돈이 바닥났다는 뜻.',
+    'GFC': 'Global Financial Crisis(2008 글로벌 금융위기). 2007-10부터 2009-03까지 미국 증시가 약 57% 하락했고, 나스닥 2배 레버리지인 QLD는 약 81% 하락했습니다. 레버리지 ETF 은퇴 전략의 최대 스트레스 테스트 구간입니다.',
+    '배당조정종가': '배당금을 모두 재투자했다고 가정해 과거 가격을 보정한 값. 배당 재투자 총수익 기준으로 종목을 공정하게 비교할 수 있습니다. 단, 배당을 현금으로 받아 쓰는 실제 운용과는 매매 타이밍이 다릅니다.',
+    '순차매도': '매달 인출할 때 방어적 자산부터 순서대로 파는 규칙 (SCHD → JEPQ → VAS → QLD). 폭락 중에 변동성 큰 QLD를 강제로 파는 것을 최대한 늦춰서 회복 여력을 지키는 전략입니다.',
+    '드리프트': '리밸런싱을 하지 않으면 많이 오른 자산의 비중이 저절로 커지는 현상. 처음 QLD 20%로 시작해도 10년 뒤엔 절반 이상이 될 수 있어, 후반부 MDD가 예상보다 커집니다.',
+    '분배율': '배당·분배금이 투자금 대비 연 몇 %인지를 나타내는 수치. 여기 입력한 종목별 배당율을 비중으로 가중평균해 포트폴리오 전체의 배당 현금흐름을 추정합니다. 시세보다 안정적이지만 보장된 것은 아니며, 특히 커버드콜 ETF(JEPQ 등)의 분배율은 시장 상황에 따라 변동이 큽니다.',
+    '자가배당': '배당만으로 생활비가 부족할 때 보유 주식 일부를 팔아 현금흐름을 만드는 방식. 이 시뮬레이터의 "월 인출액"이 자가배당(매도 인출)에 해당하며, 순차매도 룰에 따라 방어적 자산부터 팝니다.',
+    '로그 스케일': '세로축을 금액이 아니라 배수 기준으로 표시하는 방법. $100K→$200K와 $1M→$2M(둘 다 2배)이 같은 높이로 보이므로, 장기 복리 성장과 초기 구간의 폭락을 왜곡 없이 볼 수 있습니다. 선형(체크 해제)은 후반의 큰 숫자만 도드라져 초기 하락이 평평하게 숨겨집니다.',
+    '배당 현금흐름': '주식을 전혀 팔지 않고 ETF가 지급하는 분배금만 현금으로 받아 쓰는 방식. 매도가 없으므로 고갈이 구조적으로 불가능하며, 리스크는 (1) 분배금 수입의 변동, (2) 평가액 드로다운을 견디는 심리입니다. 이 모드의 수입은 위에 입력한 배당율이 아니라 과거 실제 분배금(배당조정종가와 미조정종가의 차이로 역산)을 사용합니다.',
+  };
+  const term = (k, txt) => `<span class="bt-term" data-bt-term="${k}">${txt||k}</span>`;
+  let glossaryReady = false;
+  function initGlossary(){
+    if(glossaryReady) return;
+    glossaryReady = true;
+    let pop = null;
+    document.addEventListener('click', e=>{
+      if(pop){ pop.remove(); pop = null; }
+      const el = e.target.closest('.bt-term');
+      if(!el) return;
+      const def = GLOSSARY[el.dataset.btTerm];
+      if(!def) return;
+      pop = document.createElement('div');
+      pop.className = 'bt-pop';
+      pop.innerHTML = `<b>${el.dataset.btTerm}</b><br>${def}`;
+      document.body.appendChild(pop);
+      const r = el.getBoundingClientRect();
+      pop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+      pop.style.left = Math.max(10, Math.min(r.left + window.scrollX,
+        window.scrollX + document.documentElement.clientWidth - pop.offsetWidth - 10)) + 'px';
+    });
+  }
+
+  // ---- 주요 폭락장 음영 ----
+  const CRASHES = [
+    { from:'2007-10', to:'2009-03', label:'GFC' },
+    { from:'2018-10', to:'2018-12', label:'미중 무역전쟁' },
+    { from:'2020-02', to:'2020-04', label:'COVID' },
+    { from:'2022-01', to:'2022-12', label:'2022 긴축' },
+    { from:'2025-02', to:'2025-05', label:'관세전쟁' },
+    { from:'2026-02', to:'2026-04', label:'이란 전쟁' },
+  ];
+  function crashBands(labels, X, top, bottom){
+    let g = '';
+    for(const c of CRASHES){
+      let i1 = -1, i2 = -1;
+      labels.forEach((m,i)=>{ if(m >= c.from && m <= c.to){ if(i1 < 0) i1 = i; i2 = i; } });
+      if(i1 < 0) continue;
+      const x1 = X(i1), x2 = X(i2);
+      g += `<rect x="${x1.toFixed(1)}" y="${top}" width="${Math.max(3, x2-x1).toFixed(1)}" height="${(bottom-top).toFixed(1)}" fill="#dc2626" opacity="0.07"/>`+
+           `<text x="${((x1+x2)/2).toFixed(1)}" y="${top+11}" fill="#b91c1c" font-size="9" text-anchor="middle" opacity="0.9">${c.label}</text>`;
+    }
+    return g;
+  }
+
+  function alignedSeries(w){
+    const active = TICKERS.filter(t => w[t] > 0);
+    if(!active.length) return null;
+    let months = BT_DATA[active[0]].months;
+    for(const t of active.slice(1)){
+      const set = new Set(BT_DATA[t].months);
+      months = months.filter(m => set.has(m));
+    }
+    const prices = {}, closeP = {}, divP = {};
+    for(const t of active){
+      const map = {}, mapC = {}, mapD = {};
+      BT_DATA[t].months.forEach((m,i)=>{
+        map[m]=BT_DATA[t].prices[i]; mapC[m]=BT_DATA[t].close[i]; mapD[m]=BT_DATA[t].div[i];
+      });
+      prices[t] = months.map(m => map[m]);
+      closeP[t] = months.map(m => mapC[m]);
+      divP[t]   = months.map(m => mapD[m]);
+    }
+    return { months, prices, close: closeP, div: divP, active };
+  }
+
+  // 배당 현금흐름 모드: 매도 없음, 실제 분배금만 현금 수령
+  // 평가액 = 미조정종가(가격), 수입 = 월별 주당 분배금(역산) x 보유주수
+  function simulateDiv(sr, w, initial, startIdx, months){
+    const order = TICKERS.filter(t => sr.active.includes(t) && w[t]>0);
+    const maxSteps = sr.months.length - 1 - startIdx;
+    const steps = months > 0 ? Math.min(months, maxSteps) : maxSteps;
+    const wsum = order.reduce((s,t)=>s+w[t],0);
+    const units = {};
+    order.forEach(t => units[t] = initial*(w[t]/wsum)/sr.close[t][startIdx]);
+    let income=0, peak=initial, maxDD=0, minV=initial, curYear=0;
+    const values=[initial], incomeLine=[0], yearly=[];
+    for(let m=1;m<=steps;m++){
+      const i = startIdx+m;
+      const inc = order.reduce((s,t)=>s+units[t]*sr.div[t][i],0);
+      income += inc; curYear += inc;
+      if(m%12===0){ yearly.push(curYear); curYear=0; }
+      const v = order.reduce((s,t)=>s+units[t]*sr.close[t][i],0);
+      peak = Math.max(peak,v);
+      if(peak>0) maxDD = Math.max(maxDD, 1-v/peak);
+      minV = Math.min(minV,v);
+      values.push(v); incomeLine.push(income);
+    }
+    return { startIdx, values, incomeLine, finalValue: values[values.length-1],
+             minValue: minV, maxDD, totalIncome: income, yearly,
+             minYear: yearly.length ? Math.min(...yearly) : null,
+             endIdx: startIdx+values.length-1 };
+  }
+
+  function rollingDiv(sr, w, initial, horizonM){
+    const lastStart = sr.months.length-1-horizonM;
+    const out = [];
+    for(let s=0;s<=lastStart;s++) out.push(simulateDiv(sr,w,initial,s,horizonM));
+    return out;
+  }
+
+  function simulate(sr, w, initial, monthlyW, startIdx, months, infl){
+    const order = SELL_ORDER.filter(t => sr.active.includes(t));
+    const maxSteps = sr.months.length - 1 - startIdx;
+    const steps = months > 0 ? Math.min(months, maxSteps) : maxSteps;
+    const wsum = order.reduce((s,t)=>s+w[t],0);
+    const units = {};
+    order.forEach(t => units[t] = initial*(w[t]/wsum)/sr.prices[t][startIdx]);
+    let withdrawn=0, peak=initial, maxDD=0, minV=initial, depleted=null;
+    const values=[initial], wline=[0];
+    for(let m=1;m<=steps;m++){
+      const i = startIdx+m;
+      let need = monthlyW * Math.pow(1+(infl||0), Math.floor((m-1)/12));
+      for(const t of order){
+        if(need<=0) break;
+        const p = sr.prices[t][i];
+        const avail = units[t]*p;
+        if(avail<=0) continue;
+        const sell = Math.min(need, avail);
+        units[t] -= sell/p; withdrawn += sell; need -= sell;
+      }
+      const v = order.reduce((s,t)=>s+units[t]*sr.prices[t][i],0);
+      if(need>0.0001 && depleted===null) depleted=m;
+      peak = Math.max(peak,v);
+      if(peak>0) maxDD = Math.max(maxDD, 1-v/peak);
+      minV = Math.min(minV,v);
+      values.push(v); wline.push(withdrawn);
+      if(depleted!==null) break;
+    }
+    return { startIdx, values, wline, finalValue:values[values.length-1],
+             minValue:minV, maxDD, withdrawn, depleted,
+             endIdx:startIdx+values.length-1 };
+  }
+
+  function rolling(sr, w, initial, monthlyW, horizonM, infl){
+    const lastStart = sr.months.length-1-horizonM;
+    const out = [];
+    for(let s=0;s<=lastStart;s++) out.push(simulate(sr,w,initial,monthlyW,s,horizonM,infl));
+    return out;
+  }
+
+  function attachHover(container, labels, defs){
+    const svg = container.querySelector('svg');
+    if(!svg || !labels.length) return;
+    container.style.position = 'relative';
+    const tip = document.createElement('div');
+    tip.className = 'bt-tip'; tip.style.display = 'none';
+    container.appendChild(tip);
+    const ns = 'http://www.w3.org/2000/svg';
+    const vline = document.createElementNS(ns,'line');
+    vline.setAttribute('stroke','#94a3b8');
+    vline.setAttribute('stroke-dasharray','3,3');
+    const vb = svg.viewBox.baseVal;
+    vline.setAttribute('y1',12); vline.setAttribute('y2', vb.height-30);
+    vline.style.display = 'none';
+    svg.appendChild(vline);
+    const W = vb.width, L = 62, R = 12;
+    svg.addEventListener('mousemove', e=>{
+      const rect = svg.getBoundingClientRect();
+      const sx = (e.clientX-rect.left)*(W/rect.width);
+      let i = Math.round((sx-L)/(W-L-R)*(labels.length-1));
+      i = Math.max(0, Math.min(labels.length-1, i));
+      const x = L+(W-L-R)*(labels.length<2?0:i/(labels.length-1));
+      vline.setAttribute('x1',x); vline.setAttribute('x2',x);
+      vline.style.display = '';
+      let html = `<b>${labels[i]}</b>`;
+      defs.forEach(d=>{
+        const v = i < d.data.length ? fK(d.data[i]) : '고갈';
+        html += `<div><span class="bt-dot" style="background:${d.color}"></span>${d.label}: <b>${v}</b></div>`;
+      });
+      tip.innerHTML = html;
+      tip.style.display = 'block';
+      const cRect = container.getBoundingClientRect();
+      const px = e.clientX - cRect.left;
+      tip.style.left = Math.max(0, Math.min(px+14, cRect.width - tip.offsetWidth - 4)) + 'px';
+      tip.style.top = '8px';
+    });
+    svg.addEventListener('mouseleave', ()=>{
+      vline.style.display = 'none'; tip.style.display = 'none';
+    });
+  }
+
+  const fK = x => x>=1e6 ? '$'+(x/1e6).toFixed(2)+'M' : '$'+Math.round(x/1000)+'K';
+  const fP = x => (x*100).toFixed(1)+'%';
+  const med = a => { const s=[...a].sort((x,y)=>x-y); const m=s.length>>1;
+    return s.length%2 ? s[m] : (s[m-1]+s[m])/2; };
+  const pctl = (a,p) => [...a].sort((x,y)=>x-y)[Math.min(a.length-1,Math.floor(a.length*p))];
+
+  function lineChart(el, labels, seriesList){
+    const W=820,H=260,L=62,R=12,T=12,B=30;
+    const all = seriesList.flatMap(s=>s.data);
+    const ymax = Math.max(...all)*1.05||1;
+    const X = i => L+(W-L-R)*(labels.length<2?0:i/(labels.length-1));
+    const Y = v => T+(H-T-B)*(1-v/ymax);
+    let g='';
+    for(let k=0;k<=4;k++){
+      const v=ymax*k/4, y=Y(v);
+      g += `<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#e2e8f0"/>`+
+           `<text x="${L-6}" y="${y+4}" fill="#64748b" font-size="10" text-anchor="end">${fK(v)}</text>`;
+    }
+    const nT = Math.min(8,labels.length);
+    for(let k=0;k<nT;k++){
+      const i = Math.round(k*(labels.length-1)/Math.max(1,nT-1));
+      g += `<text x="${X(i)}" y="${H-8}" fill="#64748b" font-size="10" text-anchor="middle">${labels[i]}</text>`;
+    }
+    g += crashBands(labels, X, T, H-B);
+    for(const s of seriesList){
+      const pts = s.data.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+      g += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2"/>`;
+    }
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+  }
+
+  function barChart(el, labels, data, flags){
+    const W=820,H=220,L=62,R=12,T=12,B=30;
+    const ymax = Math.max(...data)*1.05||1;
+    const bw = Math.max(1,(W-L-R)/data.length-1);
+    const Y = v => T+(H-T-B)*(1-v/ymax);
+    let g='';
+    for(let k=0;k<=4;k++){
+      const v=ymax*k/4, y=Y(v);
+      g += `<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#e2e8f0"/>`+
+           `<text x="${L-6}" y="${y+4}" fill="#64748b" font-size="10" text-anchor="end">${fK(v)}</text>`;
+    }
+    data.forEach((v,i)=>{
+      const x = L+(W-L-R)*i/data.length;
+      g += `<rect x="${x.toFixed(1)}" y="${Y(v).toFixed(1)}" width="${bw.toFixed(1)}" height="${(H-B-Y(v)).toFixed(1)}" fill="${flags[i]?'#dc2626':'#0984e3'}" opacity="0.85"/>`;
+    });
+    const nT = Math.min(8,labels.length);
+    for(let k=0;k<nT;k++){
+      const i = Math.round(k*(labels.length-1)/Math.max(1,nT-1));
+      const x = L+(W-L-R)*i/data.length;
+      g += `<text x="${x}" y="${H-8}" fill="#64748b" font-size="10" text-anchor="middle">${labels[i]}</text>`;
+    }
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+  }
+
+  const stat = (k,v,cls='') =>
+    `<div class="bt-stat"><div class="k">${k}</div><div class="v ${cls}">${v}</div></div>`;
+
+  function getWeights(){
+    const w={};
+    TICKERS.forEach(t => w[t] = +document.getElementById('bt-w-'+t).value);
+    return w;
+  }
+
+  function rebuildStartOptions(){
+    const sr = alignedSeries(getWeights());
+    const sel = document.getElementById('bt-startMonth');
+    const prev = sel.value;
+    sel.innerHTML = '';
+    if(!sr) return;
+    sr.months.slice(0,-1).forEach(m=>{
+      const o=document.createElement('option'); o.value=m; o.textContent=m;
+      sel.appendChild(o);
+    });
+    sel.value = sr.months.includes(prev) ? prev : sr.months[0];
+  }
+
+  function update(){
+    const w = getWeights();
+    const total = TICKERS.reduce((s,t)=>s+w[t],0);
+    document.getElementById('bt-wtotal').textContent = total+'%';
+    if(total===0) return;
+
+    const sr = alignedSeries(w);
+    const initial = +document.getElementById('bt-initial').value || 170000;
+    const mode = document.getElementById('bt-mode').value;
+    const wmode = document.getElementById('bt-wmode').value;
+    const mInput = document.getElementById('bt-monthly');
+    const wmodeSel = document.getElementById('bt-wmode');
+    const inflInput = document.getElementById('bt-infl');
+    if(mode === 'div'){
+      mInput.disabled = true; wmodeSel.disabled = true; inflInput.disabled = true;
+      document.getElementById('bt-rateHint').textContent = '— 배당 모드에서는 미사용';
+      document.getElementById('bt-modeHint').textContent =
+        '매도가 없어 고갈이 불가능합니다 · 수입은 과거 실제 분배금(역산) 기준 — 위에 입력한 배당율과 무관 · 월 인출액/증가율 입력은 미사용';
+    } else {
+      wmodeSel.disabled = false; inflInput.disabled = false;
+      if(wmode !== 'manual'){
+        mInput.value = Math.round(initial*(+wmode)/12);
+        mInput.disabled = true;
+      } else mInput.disabled = false;
+      document.getElementById('bt-modeHint').textContent =
+        '매달 고정 금액을 순차매도(SCHD→JEPQ→VAS→QLD)로 마련해 인출합니다';
+    }
+    const monthlyW = +mInput.value || 0;
+    const infl = (+inflInput.value || 0)/100;
+    const horizonM = (+document.getElementById('bt-horizon').value)*12;
+    if(mode !== 'div')
+      document.getElementById('bt-rateHint').textContent =
+        '≈ 초기자산 대비 연 '+fP(monthlyW*12/initial);
+
+    // 종목별 금액 (초기투자금 × 비중) — 실계좌 리밸런싱 참고용
+    TICKERS.forEach(t => {
+      const amt = initial * (w[t]/total);
+      document.getElementById('bt-amt-'+t).textContent =
+        w[t]>0 ? '$'+Math.round(amt).toLocaleString() : '—';
+    });
+
+    // 배당 현금흐름 (입력 배당율 × 비중 가중평균, 참고치)
+    const avgY = TICKERS.reduce((s,t)=>
+      s + (w[t]/total) * (+document.getElementById('bt-y-'+t).value || 0), 0);
+    const annualDiv = initial * avgY / 100;
+    document.getElementById('bt-divStats').innerHTML =
+      stat(term('분배율','가중평균 배당율'), avgY.toFixed(2)+'%/년', 'bt-good') +
+      stat('연 현금흐름', '$'+Math.round(annualDiv).toLocaleString()) +
+      stat('월 현금흐름', '$'+Math.round(annualDiv/12).toLocaleString()) +
+      stat('주 현금흐름', '$'+Math.round(annualDiv/52).toLocaleString());
+
+    const sel = document.getElementById('bt-startMonth');
+    let startIdx = sr.months.indexOf(sel.value);
+    if(startIdx<0) startIdx=0;
+
+    const canRoll = horizonM>0 && sr.months.length-1>horizonM;
+
+    if(mode === 'div'){
+      // ---- 배당 현금흐름 모드 ----
+      const r = simulateDiv(sr, w, initial, startIdx, horizonM);
+      const labels = sr.months.slice(startIdx, r.endIdx+1);
+      document.getElementById('bt-pathRange').textContent =
+        `— ${labels[0]} ~ ${labels[labels.length-1]} · 배당 현금흐름 모드`;
+      document.getElementById('bt-pathStats').innerHTML =
+        stat('최종 평가액', fK(r.finalValue), r.finalValue>=initial?'bt-good':'bt-bad') +
+        stat('최저 평가액', fK(r.minValue), 'bt-warn') +
+        stat(term('MDD','Max Drawdown'), fP(r.maxDD), r.maxDD>0.4?'bt-bad':'bt-warn') +
+        stat('누적 분배금 수령', fK(r.totalIncome), 'bt-good') +
+        stat('최저 연수입', r.minYear!==null
+          ? '$'+Math.round(r.minYear).toLocaleString()+' ('+fP(r.minYear/initial)+')'
+          : '— (1년 미만)', 'bt-warn');
+      lineChart(document.getElementById('bt-chart'), labels, [
+        { data:r.values, color:'#0984e3' },
+        { data:r.incomeLine, color:'#00b894' },
+      ]);
+      attachHover(document.getElementById('bt-chart'), labels, [
+        { label:'평가액', color:'#0984e3', data:r.values },
+        { label:'누적 분배금', color:'#00b894', data:r.incomeLine },
+      ]);
+
+      if(canRoll){
+        const rolls = rollingDiv(sr, w, initial, horizonM);
+        const minYields = rolls.map(x=>x.minYear/initial);
+        const finals = rolls.map(x=>x.finalValue);
+        const mdds = rolls.map(x=>x.maxDD);
+        document.getElementById('bt-rollInfo').textContent =
+          `— ${rolls.length}개 경로 · ${horizonM/12}년 고정 · 배당 모드`;
+        document.getElementById('bt-rollStats').innerHTML =
+          stat(term('P10','최악년도 수입률 P10'), fP(pctl(minYields,0.10))+'/년', 'bt-warn') +
+          stat(term('중앙값','최악년도 수입률 중앙'), fP(med(minYields))+'/년') +
+          stat(term('MDD','평가액 MDD 중앙/최악'), fP(med(mdds))+' / '+fP(Math.max(...mdds)), 'bt-warn') +
+          stat(term('중앙값','최종 평가액 중앙'), fK(med(finals)), 'bt-good') +
+          stat(term('P10','최종 평가액 P10'), fK(pctl(finals,0.10)), 'bt-warn');
+        barChart(document.getElementById('bt-rollChart'),
+          rolls.map(x=>sr.months[x.startIdx]), finals, rolls.map(()=>false));
+      } else {
+        document.getElementById('bt-rollInfo').textContent =
+          '— 기간을 고정(3~15년)하면 시작월 전수 롤링이 계산됩니다';
+        document.getElementById('bt-rollStats').innerHTML = '';
+        document.getElementById('bt-rollChart').innerHTML = '';
+      }
+
+      document.getElementById('bt-matrix').innerHTML =
+        `<tr><td class="hint" style="text-align:left;padding:10px 0">배당 현금흐름 모드에서는 인출률 매트릭스가 적용되지 않습니다 —
+         매도가 없으므로 인출액은 선택이 아니라 ETF가 지급한 실제 분배금으로 결정됩니다.
+         수입 수준은 위 롤링 통계의 "최악년도 수입률"을 참고하세요.</td></tr>`;
+      return;
+    }
+
+    // ---- 자가배당(매도 인출) 모드 ----
+    const r = simulate(sr, w, initial, monthlyW, startIdx, horizonM, infl);
+    const labels = sr.months.slice(startIdx, r.endIdx+1);
+    document.getElementById('bt-pathRange').textContent =
+      `— ${labels[0]} ~ ${labels[labels.length-1]}`;
+    document.getElementById('bt-pathStats').innerHTML =
+      stat('최종 평가액', fK(r.finalValue), r.finalValue>=initial?'bt-good':'bt-bad') +
+      stat('최저 평가액', fK(r.minValue), 'bt-warn') +
+      stat(term('MDD','Max Drawdown'), fP(r.maxDD), r.maxDD>0.4?'bt-bad':'bt-warn') +
+      stat('누적 인출액', fK(r.withdrawn), 'bt-good') +
+      stat(term('고갈','고갈 여부'), r.depleted ? r.depleted+'개월 차 고갈' : '생존',
+           r.depleted ? 'bt-bad' : 'bt-good');
+    lineChart(document.getElementById('bt-chart'), labels, [
+      { data:r.values, color:'#0984e3' },
+      { data:r.wline, color:'#00b894' },
+    ]);
+    attachHover(document.getElementById('bt-chart'), labels, [
+      { label:'평가액', color:'#0984e3', data:r.values },
+      { label:'누적 인출', color:'#00b894', data:r.wline },
+    ]);
+
+    if(canRoll){
+      const rolls = rolling(sr, w, initial, monthlyW, horizonM, infl);
+      const finals = rolls.map(x=>x.finalValue);
+      const mdds = rolls.map(x=>x.maxDD);
+      const dep = rolls.filter(x=>x.depleted!==null);
+      document.getElementById('bt-rollInfo').textContent =
+        `— ${rolls.length}개 경로 · ${horizonM/12}년 고정`;
+      document.getElementById('bt-rollStats').innerHTML =
+        stat(term('고갈확률','고갈 확률'), fP(dep.length/rolls.length), dep.length?'bt-bad':'bt-good') +
+        stat(term('중앙값','최종 중앙값'), fK(med(finals))) +
+        stat(term('P10','최종 P10 (하위10%)'), fK(pctl(finals,0.10)), 'bt-warn') +
+        stat(term('P90','최종 P90 (상위10%)'), fK(pctl(finals,0.90)), 'bt-good') +
+        stat(term('MDD','MDD 중앙 / 최악'), fP(med(mdds))+' / '+fP(Math.max(...mdds)), 'bt-warn');
+      barChart(document.getElementById('bt-rollChart'),
+        rolls.map(x=>sr.months[x.startIdx]), finals,
+        rolls.map(x=>x.depleted!==null));
+    } else {
+      document.getElementById('bt-rollInfo').textContent =
+        '— 기간을 고정(3~15년)하면 시작월 전수 롤링이 계산됩니다';
+      document.getElementById('bt-rollStats').innerHTML = '';
+      document.getElementById('bt-rollChart').innerHTML = '';
+    }
+
+    let html = `<tr><th>연 인출률</th><th>월 인출액</th><th>${term('고갈확률')}</th>
+      <th>${term('중앙값','최종 중앙값')}</th><th>${term('P10','최종 P10')}</th><th>${term('MDD','MDD 중앙')}</th><th>${term('MDD','MDD 최악')}</th></tr>`;
+    if(canRoll){
+      for(const rate of [0.04,0.06,0.08,0.10,0.12]){
+        const mw = initial*rate/12;
+        const rolls = rolling(sr, w, initial, mw, horizonM, infl);
+        const finals = rolls.map(x=>x.finalValue);
+        const mdds = rolls.map(x=>x.maxDD);
+        const depN = rolls.filter(x=>x.depleted!==null).length;
+        html += `<tr><td>${fP(rate)}</td><td>$${Math.round(mw).toLocaleString()}</td>
+          <td class="${depN?'bt-bad':'bt-good'}">${fP(depN/rolls.length)}</td>
+          <td>${fK(med(finals))}</td><td>${fK(pctl(finals,0.10))}</td>
+          <td>${fP(med(mdds))}</td><td>${fP(Math.max(...mdds))}</td></tr>`;
+      }
+    } else {
+      html += `<tr><td class="hint" style="text-align:left;padding:10px 0" colspan="7">기간이 "데이터 끝까지"면 시작월마다 길이가 달라 비교할 수 없습니다 —
+        시뮬레이션 기간을 3~15년으로 고정하면 인출률별 고갈확률·분포가 계산됩니다.</td></tr>`;
+    }
+    document.getElementById('bt-matrix').innerHTML = html;
+  }
+
+  // ---- 전략 비교 (QLD · QLD+SCHD) ----
+  const CMP_STRATS = [
+    { key:'q100', label:'QLD 100%',        w:{QLD:100,SCHD:0,JEPQ:0,VAS:0}, color:'#94a3b8', on:true },
+    { key:'q80',  label:'QLD 80 · SCHD 20', w:{QLD:80,SCHD:20,JEPQ:0,VAS:0}, color:'#0984e3', on:true },
+    { key:'q60',  label:'QLD 60 · SCHD 40', w:{QLD:60,SCHD:40,JEPQ:0,VAS:0}, color:'#00b894', on:true },
+    { key:'q40',  label:'QLD 40 · SCHD 60', w:{QLD:40,SCHD:60,JEPQ:0,VAS:0}, color:'#d97706', on:true },
+    { key:'s100', label:'SCHD 100%',       w:{QLD:0,SCHD:100,JEPQ:0,VAS:0}, color:'#7c3aed', on:false },
+  ];
+  function stratW(st){ return st.w || getWeights(); }
+  function stratLabel(st){
+    if(st.w) return st.label;
+    const w = getWeights();
+    return '내 포트 (' + TICKERS.filter(t=>w[t]>0).map(t=>t+' '+w[t]).join('·') + ')';
+  }
+
+  function cmpChart(el, labels, seriesList, useLog){
+    const W=820,H=300,L=62,R=12,T=12,B=30;
+    const all = seriesList.flatMap(s=>s.data).filter(v=>v>0);
+    if(!all.length){ el.innerHTML=''; return; }
+    const hi = Math.max(...all)*1.05;
+    const lo = useLog ? Math.max(100, Math.min(...all)*0.95) : 0;
+    const lg = Math.log10;
+    const Y = v => {
+      if(useLog){
+        const vv = Math.max(v, lo);
+        return T+(H-T-B)*(1-(lg(vv)-lg(lo))/(lg(hi)-lg(lo)));
+      }
+      return T+(H-T-B)*(1-(v-lo)/(hi-lo));
+    };
+    const X = i => L+(W-L-R)*(labels.length<2?0:i/(labels.length-1));
+    let g='';
+    for(let k=0;k<=4;k++){
+      const v = useLog ? Math.pow(10, lg(lo)+(lg(hi)-lg(lo))*k/4) : lo+(hi-lo)*k/4;
+      const y = Y(v);
+      g += `<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#e2e8f0"/>`+
+           `<text x="${L-6}" y="${y+4}" fill="#64748b" font-size="10" text-anchor="end">${fK(v)}</text>`;
+    }
+    const nT = Math.min(8,labels.length);
+    for(let k=0;k<nT;k++){
+      const i = Math.round(k*(labels.length-1)/Math.max(1,nT-1));
+      g += `<text x="${X(i)}" y="${H-8}" fill="#64748b" font-size="10" text-anchor="middle">${labels[i]}</text>`;
+    }
+    g += crashBands(labels, X, T, H-B);
+    for(const s of seriesList){
+      const pts = s.data.map((v,i)=>`${X(i).toFixed(1)},${Y(Math.max(v, useLog?lo:0)).toFixed(1)}`).join(' ');
+      g += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.2"/>`;
+      if(s.depleted){
+        const li = s.data.length-1;
+        g += `<circle cx="${X(li)}" cy="${Y(Math.max(s.data[li],useLog?lo:0))}" r="4.5" fill="#dc2626"/>`;
+      }
+    }
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+  }
+
+  function cmpActive(){
+    return CMP_STRATS.filter(s => document.getElementById('cmp-ck-'+s.key).checked);
+  }
+
+  function cmpMonths(strats){
+    const tick = new Set();
+    strats.forEach(s => { const sw = stratW(s); TICKERS.forEach(t => { if(sw[t]>0) tick.add(t); }); });
+    if(!tick.size) return null;
+    return alignedSeries(Object.fromEntries(TICKERS.map(t=>[t, tick.has(t)?1:0])));
+  }
+
+  function cmpRebuildStart(){
+    const strats = cmpActive();
+    const base = cmpMonths(strats);
+    const sel = document.getElementById('cmp-start');
+    const prev = sel.value;
+    sel.innerHTML = '';
+    if(!base) return;
+    base.months.slice(0,-1).forEach(m=>{
+      const o=document.createElement('option'); o.value=m; o.textContent=m;
+      sel.appendChild(o);
+    });
+    sel.value = base.months.includes(prev) ? prev : base.months[0];
+  }
+
+  function cmpUpdate(){
+    const strats = cmpActive();
+    const base = cmpMonths(strats);
+    const tableEl = document.getElementById('cmp-table');
+    if(!base){ document.getElementById('cmp-chart').innerHTML=''; tableEl.innerHTML=''; return; }
+    const initial = +document.getElementById('cmp-initial').value || 170000;
+    const cwmode = document.getElementById('cmp-wmode').value;
+    const cmInput = document.getElementById('cmp-monthly');
+    if(cwmode !== 'manual'){
+      cmInput.value = Math.round(initial*(+cwmode)/12);
+      cmInput.disabled = true;
+    } else cmInput.disabled = false;
+    const monthlyW = +cmInput.value || 0;
+    const infl = (+document.getElementById('cmp-infl').value || 0)/100;
+    const horizonM = (+document.getElementById('cmp-horizon').value)*12;
+    const useLog = document.getElementById('cmp-log').checked;
+    document.getElementById('cmp-rateHint').textContent =
+      '≈ 초기자산 대비 연 '+fP(monthlyW*12/initial);
+    let startIdx = base.months.indexOf(document.getElementById('cmp-start').value);
+    if(startIdx<0) startIdx=0;
+
+    const seriesList=[], legends=[];
+    let maxEnd=startIdx;
+    let rowsHtml = `<tr><th>전략</th><th>최종 평가액</th><th>최저</th><th>${term('MDD')}</th>
+      <th>누적 인출</th><th>${term('고갈')}</th><th>${term('고갈확률')}(${term('롤링')})</th><th>${term('중앙값','최종 중앙값')}(롤링)</th></tr>`;
+    for(const st of strats){
+      const stw = stratW(st), stl = stratLabel(st);
+      const sr = alignedSeries(stw);
+      // base.months 그리드로 정렬 (교집합이므로 동일 시작월 존재)
+      const off = sr.months.indexOf(base.months[startIdx]);
+      const r = simulate(sr, stw, initial, monthlyW, off, horizonM, infl);
+      maxEnd = Math.max(maxEnd, startIdx + r.values.length - 1);
+      seriesList.push({ data:r.values, color:st.color, depleted:r.depleted!==null, label:stl });
+      legends.push(`<span><span class="bt-dot" style="background:${st.color}"></span>${stl}</span>`);
+      let depProb='—', finMed='—';
+      if(horizonM>0 && sr.months.length-1>horizonM){
+        const rolls = rolling(sr, stw, initial, monthlyW, horizonM, infl);
+        depProb = fP(rolls.filter(x=>x.depleted!==null).length/rolls.length);
+        finMed = fK(med(rolls.map(x=>x.finalValue)));
+      }
+      rowsHtml += `<tr><td style="color:${st.color};font-weight:700">${stl}</td>
+        <td>${fK(r.finalValue)}</td><td>${fK(r.minValue)}</td><td>${fP(r.maxDD)}</td>
+        <td>${fK(r.withdrawn)}</td>
+        <td class="${r.depleted?'bt-bad':'bt-good'}">${r.depleted? r.depleted+'개월':'생존'}</td>
+        <td class="${depProb!=='0.0%'&&depProb!=='—'?'bt-bad':'bt-good'}">${depProb}</td>
+        <td>${finMed}</td></tr>`;
+    }
+    const labels = base.months.slice(startIdx, maxEnd+1);
+    document.getElementById('cmp-range').textContent =
+      `— ${labels[0]} ~ ${labels[labels.length-1]}${useLog?' · 로그 스케일':''}`;
+    cmpChart(document.getElementById('cmp-chart'), labels, seriesList, useLog);
+    attachHover(document.getElementById('cmp-chart'), labels, seriesList);
+    document.getElementById('cmp-legend').innerHTML =
+      legends.join('') + '<span><span class="bt-dot" style="background:#dc2626"></span>● 고갈 시점</span>' +
+      '<span style="color:#b91c1c">▨ 붉은 음영 = 폭락장</span>';
+    tableEl.innerHTML = rowsHtml;
+  }
+
+  // 한 종목을 바꾸면 나머지를 비례 조정해 합계를 항상 100으로 유지
+  function rebalance(changed){
+    const w = getWeights();
+    w[changed] = Math.max(0, Math.min(100, Math.round(w[changed])));
+    const others = TICKERS.filter(t => t !== changed);
+    const target = 100 - w[changed];
+    const restSum = others.reduce((s,t)=>s+w[t],0);
+    if(restSum <= 0){
+      w[others[0]] = target;
+    } else {
+      let acc = 0;
+      others.forEach((t,i)=>{
+        if(i === others.length-1){ w[t] = target - acc; }
+        else { w[t] = Math.round(w[t]/restSum*target); acc += w[t]; }
+      });
+      const neg = others.find(t => w[t] < 0);
+      if(neg){
+        const deficit = -w[neg]; w[neg] = 0;
+        const big = others.filter(t=>t!==neg).sort((a,b)=>w[b]-w[a])[0];
+        if(big) w[big] -= deficit;
+      }
+    }
+    TICKERS.forEach(t => document.getElementById('bt-w-'+t).value = w[t]);
+  }
+
+  return function initBT(){
+    if(ready) return;
+    ready = true;
+    initGlossary();
+    const wd = document.getElementById('bt-weights');
+    let wtHtml = `<table class="bt-wtable"><tr><th>종목</th><th>비중 %</th><th>금액</th><th>배당율 %/년</th></tr>`;
+    TICKERS.forEach(t=>{
+      wtHtml += `<tr><td style="font-weight:700;color:var(--primary)">${t}</td>
+        <td><input type="number" min="0" max="100" step="5" value="${DEFAULT_W[t]}" id="bt-w-${t}"></td>
+        <td id="bt-amt-${t}" style="font-weight:700;color:var(--accent2);font-variant-numeric:tabular-nums"></td>
+        <td><input type="number" min="0" max="30" step="0.1" value="${DEFAULT_Y[t]}" id="bt-y-${t}"></td></tr>`;
+    });
+    wd.innerHTML = wtHtml + '</table>';
+    TICKERS.forEach(t => {
+      document.getElementById('bt-w-'+t).addEventListener('change', ()=>{
+        rebalance(t);
+        rebuildStartOptions(); update();
+        cmpRebuildStart(); cmpUpdate();
+      });
+      document.getElementById('bt-y-'+t).addEventListener('input', update);
+    });
+    ['bt-initial','bt-monthly','bt-startMonth','bt-horizon','bt-wmode','bt-infl','bt-mode'].forEach(id =>
+      document.getElementById(id).addEventListener('input', update));
+    rebuildStartOptions();
+    update();
+
+    const cd = document.getElementById('cmp-checks');
+    CMP_STRATS.forEach(st=>{
+      const lb = document.createElement('label');
+      lb.style.cssText = 'display:flex;align-items:center;gap:6px;cursor:pointer;';
+      lb.innerHTML = `<input type="checkbox" id="cmp-ck-${st.key}" ${st.on?'checked':''}>
+        <span class="bt-dot" style="background:${st.color}"></span>${st.label}`;
+      cd.appendChild(lb);
+      lb.querySelector('input').addEventListener('change', ()=>{ cmpRebuildStart(); cmpUpdate(); });
+    });
+    ['cmp-initial','cmp-monthly','cmp-start','cmp-horizon','cmp-log','cmp-wmode','cmp-infl'].forEach(id =>
+      document.getElementById(id).addEventListener('input', cmpUpdate));
+    cmpRebuildStart();
+    cmpUpdate();
+  };
+})();
+</script>
+</body>
+</html>
