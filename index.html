@@ -489,43 +489,69 @@
     <div class="calc-panel">
       <div class="calc-header">
         <div class="ch-icon">💼</div>
-        <div><h2>포트폴리오 배당 계산기</h2><p>총자산 → Super/Non-Super 플랫폼 → 자산분류별 비중·배당율 → 월/연 배당 현금흐름</p></div>
+        <div><h2>포트폴리오 배당 계산기</h2><p>플랫폼별 총액 입력 → 자산분류 비중 분산 → 배당 현금흐름·자산 배분 시각화</p></div>
       </div>
       <div class="calc-body">
 
         <div style="background:#eff6ff;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:0.8rem;color:#1e40af;">
-          ① 총자산을 먼저 입력 → ② 각 플랫폼·자산분류별로 비중(%)과 배당율을 넣으면 → 매월 나오는 배당이 자동 계산됩니다. 종목명은 메모용입니다.
+          ① 각 플랫폼(Super / Non-Super) 총액을 입력 → ② 자산분류별 비중(%)을 조절하면 금액이 자동 분산됩니다 (플랫폼 내 비중 합계 100%). 종목명은 메모용입니다.
         </div>
 
-        <div class="form-grid" style="margin-bottom:16px">
+        <div class="bt-sub">① SUPER 플랫폼 <span>— 연금·SMSF 등 (은퇴전 인출 제한, 세제 혜택)</span></div>
+        <div class="form-grid" style="margin-bottom:10px">
           <div class="form-group">
-            <label>① 총 자산</label>
-            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="pf-total" value="500000" step="10000" min="0" oninput="pfUpdate()"></div>
+            <label>SUPER 총액</label>
+            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="pf-super-total" value="300000" step="10000" min="0" oninput="pfUpdate()"></div>
           </div>
-          <div class="form-group">
-            <label>통화 / 표시</label>
-            <div style="font-size:0.8rem;color:var(--muted);padding-top:10px">금액 단위는 자유 (AUD·USD·KRW 무관) · 비중 합계 <b id="pf-wtotal">100%</b></div>
-          </div>
+          <div class="form-group"><label>비중 합계</label><div style="padding-top:10px;font-weight:700" id="pf-super-wsum">100%</div></div>
         </div>
+        <div id="pf-super-rows" style="margin-bottom:20px"></div>
 
-        <div class="bt-sub">② SUPER 플랫폼 <span>— 연금·SMSF 등 (은퇴전 인출 제한, 세제 혜택)</span> · 소계 <b id="pf-super-sub" style="color:var(--accent2)">$0</b></div>
-        <div id="pf-super-rows" style="margin-bottom:16px"></div>
-
-        <div class="bt-sub">② NON-SUPER 플랫폼 <span>— 일반 증권·은행 계좌 (자유 인출)</span> · 소계 <b id="pf-nonsuper-sub" style="color:var(--accent)">$0</b></div>
-        <div id="pf-nonsuper-rows" style="margin-bottom:16px"></div>
+        <div class="bt-sub">① NON-SUPER 플랫폼 <span>— 일반 증권·은행 계좌 (자유 인출)</span></div>
+        <div class="form-grid" style="margin-bottom:10px">
+          <div class="form-group">
+            <label>NON-SUPER 총액</label>
+            <div class="input-wrap"><span class="input-prefix">$</span><input type="number" id="pf-nonsuper-total" value="200000" step="10000" min="0" oninput="pfUpdate()"></div>
+          </div>
+          <div class="form-group"><label>비중 합계</label><div style="padding-top:10px;font-weight:700" id="pf-nonsuper-wsum">100%</div></div>
+        </div>
+        <div id="pf-nonsuper-rows" style="margin-bottom:20px"></div>
 
         <div class="divider"></div>
 
-        <div class="bt-sub">③ 배당 현금흐름 결과</div>
-        <div class="bt-stats" id="pf-result"></div>
+        <div class="bt-sub">② 자산 배분 <span>— 전체 금융자산 <b id="pf-grand" style="color:var(--primary)">$0</b></span></div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin:10px 0 4px">
+          <div style="text-align:center">
+            <div style="font-size:0.82rem;font-weight:700;color:var(--accent2);margin-bottom:4px">SUPER <span id="pf-super-sub" style="color:var(--muted);font-weight:400"></span></div>
+            <svg id="pf-super-pie" viewBox="0 0 140 140" style="width:150px;height:150px"></svg>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:4px">NON-SUPER <span id="pf-nonsuper-sub" style="color:var(--muted);font-weight:400"></span></div>
+            <svg id="pf-nonsuper-pie" viewBox="0 0 140 140" style="width:150px;height:150px"></svg>
+          </div>
+        </div>
+        <div id="pf-legend" style="display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:center;margin-bottom:14px;font-size:0.74rem;color:#374151"></div>
 
-        <div class="bt-sub" style="margin-top:16px">자산분류별 요약</div>
+        <div class="bt-sub">자산분류별 요약</div>
         <table class="bt-table" id="pf-breakdown"></table>
 
-        <div class="warn-box" style="margin-top:16px;">
-          <strong>⚠ 참고</strong> — 배당율은 입력한 값(예상/과거 평균)을 그대로 사용합니다. 특히 커버드콜 ETF는 분배율 변동이 큽니다.
-          세금·프랭킹크레딧 미반영 (호주 SMSF 연금단계는 세율 0%). 실제 배당은 종목·시장 상황에 따라 달라집니다.
-        </div>
+        <div class="divider"></div>
+
+        <div class="bt-sub">③ 배당 현금흐름 결과 <span>— 세전 기준 (아래 세금 참고)</span></div>
+        <div class="bt-stats" id="pf-result"></div>
+
+        <details style="margin-top:16px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 16px;">
+          <summary style="cursor:pointer;font-weight:700;color:var(--primary);font-size:0.9rem;">💡 배당·세금 참고 (호주 franking credit · 미국 원천징수 · SMSF 세율)</summary>
+          <div style="font-size:0.82rem;line-height:1.85;color:#374151;margin-top:10px">
+            <p style="margin-bottom:8px"><b style="color:var(--primary)">🇦🇺 호주 배당주 — Franking Credit (배당가산세액공제)</b><br/>
+            호주 기업이 이미 법인세(30%)를 낸 배당(fully franked)에는 franking credit이 붙습니다. 이를 통해 이중과세를 막고, 투자자의 세율이 30%보다 낮으면 차액을 <b>환급</b>받습니다. 예: VAS의 표시 배당율이 3.8%라도 franking을 포함한 <b>grossed-up 실효수익률은 더 높습니다</b>.</p>
+            <p style="margin-bottom:8px"><b style="color:var(--primary)">🇺🇸 미국 배당주 — 원천징수 15%</b><br/>
+            미국 종목(JEPQ·SCHD·QQQ 등)의 배당은 미국에서 <b>15% 원천징수</b>(W-8BEN 제출 기준) 후 들어옵니다. 이 계산기의 배당율은 <b>세전(원천징수 전)</b>이므로, 미국 종목 실수령액은 약 15% 적다고 보면 됩니다. (SMSF·연금단계여도 미국 원천징수는 조세조약상 남습니다.)</p>
+            <p><b style="color:var(--primary)">🏦 SMSF 세율 — 적립단계 15% / 연금단계(ABP) 0%</b><br/>
+            SMSF 적립단계(accumulation)는 배당·양도차익에 <b>15%</b>, 연금단계(ABP, 60세 이후 account-based pension)는 <b>0%</b>입니다. ABP 전환 후에는 호주 내 배당·양도차익이 비과세이며 franking credit은 <b>전액 환급</b>됩니다. 표시 배당율은 이 세금들을 반영하지 않은 세전 값입니다.</p>
+            <div class="hint" style="margin-top:8px">※ 세금은 개인 상황(거주지·펀드 단계·소득)에 따라 달라집니다. 정확한 계산은 회계사·ATO에 확인하세요.</div>
+          </div>
+        </details>
 
       </div>
     </div>
@@ -765,15 +791,17 @@ function fmtI(n){return '$'+Math.round(Math.max(0,n)).toString().replace(/\B(?=(
 function fmtK(n){return '$'+Math.round(n/1000)+'K';}
 // ===== 포트폴리오 배당 계산기 (공개용) =====
 const PF_CLASSES = [
-  { key:'cc',   name:'커버드콜 ETF', color:'#0984e3', hint:'JEPQ, QYLD, GPIQ 등', yield:9.0 },
-  { key:'div',  name:'배당주',        color:'#00b894', hint:'SCHD, VHY, VAS 등',   yield:4.0 },
-  { key:'ind',  name:'개별주',        color:'#6c5ce7', hint:'개별 종목',        yield:2.0 },
-  { key:'idx',  name:'지수투자',    color:'#e17055', hint:'QLD, IVV, NDQ 등',   yield:1.0 },
-  { key:'cash', name:'현금 / 예비',  color:'#b2bec3', hint:'SGOV, 예금 등',    yield:4.0 },
+  { key:'ushy',  name:'미국 중배당주',   hint:'JEPQ·GPIQ·QQQI', color:'#0984e3', yield:9.0 },
+  { key:'usdg',  name:'미국 배당성장주', hint:'SCHD 등',        color:'#00b894', yield:3.5 },
+  { key:'usind', name:'미국 개별주',     hint:'PLTR·TSLA 등',   color:'#6c5ce7', yield:0.0 },
+  { key:'usidx', name:'미국 지수투자',   hint:'SPYM·QQQ·QLD',   color:'#e17055', yield:1.0 },
+  { key:'audiv', name:'호주 배당주',     hint:'VAS 등',         color:'#e84393', yield:3.8 },
+  { key:'auidx', name:'호주 지수투자',   hint:'NDQ 등',         color:'#fdcb6e', yield:0.5 },
+  { key:'cash',  name:'현금 / 예비',     hint:'SGOV·예금',      color:'#b2bec3', yield:4.5 },
 ];
 const PF_PLATFORMS = [
-  { pf:'super',    label:'SUPER',     defW:{cc:25,div:15,ind:0, idx:15,cash:5} },
-  { pf:'nonsuper', label:'NON-SUPER', defW:{cc:10,div:15,ind:5, idx:5, cash:5} },
+  { pf:'super',    defW:{ushy:25,usdg:20,usind:0, usidx:30,audiv:10,auidx:10,cash:5} },
+  { pf:'nonsuper', defW:{ushy:30,usdg:20,usind:10,usidx:15,audiv:10,auidx:5, cash:10} },
 ];
 let pfReady = false;
 
@@ -786,52 +814,76 @@ function pfRows(pf, defW){
       + `<td style="text-align:left"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${cl.color};margin-right:6px"></span><b>${cl.name}</b><div class="hint" style="margin-left:16px">${cl.hint}</div></td>`
       + `<td><input type="number" min="0" max="100" step="5" value="${defW[cl.key]}" id="pf-${pf}-w-${cl.key}" oninput="pfUpdate()"></td>`
       + `<td id="pf-${pf}-amt-${cl.key}" style="font-weight:700;color:var(--accent2);font-variant-numeric:tabular-nums"></td>`
-      + `<td style="text-align:left"><input type="text" placeholder="예: JEPQ" id="pf-${pf}-tk-${cl.key}" style="width:130px;text-align:left"></td>`
+      + `<td style="text-align:left"><input type="text" placeholder="${cl.hint}" id="pf-${pf}-tk-${cl.key}" style="width:120px;text-align:left"></td>`
       + `<td><input type="number" min="0" max="30" step="0.1" value="${cl.yield}" id="pf-${pf}-y-${cl.key}" oninput="pfUpdate()"></td>`
       + '</tr>';
   });
   return h + '</table>';
 }
 
-function pfUpdate(){
-  const total = +document.getElementById('pf-total').value || 0;
-  let grandW = 0, grandDiv = 0, wYieldNum = 0;
-  const byClass = {};
-  PF_CLASSES.forEach(cl => byClass[cl.key] = { amt:0, div:0 });
-  const pfSub = {};
-  PF_PLATFORMS.forEach(pl => {
-    let sub = 0;
-    PF_CLASSES.forEach(cl => {
-      const w = (+document.getElementById(`pf-${pl.pf}-w-${cl.key}`).value || 0);
-      const y = (+document.getElementById(`pf-${pl.pf}-y-${cl.key}`).value || 0);
-      const amt = total * w / 100;
-      const dv = amt * y / 100;
-      document.getElementById(`pf-${pl.pf}-amt-${cl.key}`).textContent = w>0 ? '$'+Math.round(amt).toLocaleString() : '—';
-      grandW += w; sub += amt; grandDiv += dv; wYieldNum += amt * y;
-      byClass[cl.key].amt += amt; byClass[cl.key].div += dv;
-    });
-    pfSub[pl.pf] = sub;
+function pfPie(svgId, pf){
+  const svg = document.getElementById(svgId);
+  const vals = PF_CLASSES.map(cl => ({ w:(+document.getElementById(`pf-${pf}-w-${cl.key}`).value||0), color:cl.color }));
+  const total = vals.reduce((s,v)=>s+v.w,0);
+  if(total<=0){ svg.innerHTML = '<text x="70" y="74" text-anchor="middle" fill="#94a3b8" font-size="11">비중 입력</text>'; return; }
+  const cx=70, cy=70, r=60, ri=36;
+  let ang = -Math.PI/2, g='';
+  vals.forEach(v=>{
+    if(v.w<=0) return;
+    const slice = v.w/total*Math.PI*2, a2 = ang+slice, lg = slice>Math.PI?1:0;
+    const x1=cx+r*Math.cos(ang), y1=cy+r*Math.sin(ang), x2=cx+r*Math.cos(a2), y2=cy+r*Math.sin(a2);
+    const xi1=cx+ri*Math.cos(a2), yi1=cy+ri*Math.sin(a2), xi2=cx+ri*Math.cos(ang), yi2=cy+ri*Math.sin(ang);
+    g += `<path d="M${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 ${lg} 1 ${x2.toFixed(2)},${y2.toFixed(2)} L${xi1.toFixed(2)},${yi1.toFixed(2)} A${ri},${ri} 0 ${lg} 0 ${xi2.toFixed(2)},${yi2.toFixed(2)} Z" fill="${v.color}" opacity="0.9"/>`;
+    ang = a2;
   });
-  document.getElementById('pf-super-sub').textContent = '$'+Math.round(pfSub.super||0).toLocaleString();
-  document.getElementById('pf-nonsuper-sub').textContent = '$'+Math.round(pfSub.nonsuper||0).toLocaleString();
-  const wt = document.getElementById('pf-wtotal');
-  wt.textContent = Math.round(grandW)+'%';
-  wt.style.color = Math.abs(grandW-100)<1 ? 'var(--accent)' : '#dc2626';
-  const invested = total * grandW / 100;
-  const wYield = invested>0 ? wYieldNum/invested : 0;
+  svg.innerHTML = g;
+}
+
+function pfUpdate(){
   const fk = x => '$'+Math.round(x).toLocaleString();
+  const totals = { super:+document.getElementById('pf-super-total').value||0,
+                   nonsuper:+document.getElementById('pf-nonsuper-total').value||0 };
+  const byClass = {}; PF_CLASSES.forEach(cl => byClass[cl.key] = { amt:0, div:0 });
+  let grandDiv = 0, wYieldNum = 0, invested = 0;
+  PF_PLATFORMS.forEach(pl => {
+    let wsum = 0;
+    PF_CLASSES.forEach(cl => wsum += (+document.getElementById(`pf-${pl.pf}-w-${cl.key}`).value||0));
+    const wsEl = document.getElementById(`pf-${pl.pf}-wsum`);
+    wsEl.textContent = Math.round(wsum)+'%';
+    wsEl.style.color = Math.abs(wsum-100)<1 ? 'var(--accent)' : '#dc2626';
+    PF_CLASSES.forEach(cl => {
+      const w = (+document.getElementById(`pf-${pl.pf}-w-${cl.key}`).value||0);
+      const y = (+document.getElementById(`pf-${pl.pf}-y-${cl.key}`).value||0);
+      const amt = totals[pl.pf] * w / 100;
+      const dv = amt * y / 100;
+      document.getElementById(`pf-${pl.pf}-amt-${cl.key}`).textContent = w>0 ? fk(amt) : '—';
+      byClass[cl.key].amt += amt; byClass[cl.key].div += dv;
+      grandDiv += dv; wYieldNum += amt*y; invested += amt;
+    });
+    pfPie(`pf-${pl.pf}-pie`, pl.pf);
+  });
+  const grand = totals.super + totals.nonsuper;
+  document.getElementById('pf-grand').textContent = fk(grand);
+  document.getElementById('pf-super-sub').textContent = '('+fk(totals.super)+')';
+  document.getElementById('pf-nonsuper-sub').textContent = '('+fk(totals.nonsuper)+')';
+  // 범례 (자산분류 색상)
+  document.getElementById('pf-legend').innerHTML = PF_CLASSES.map(cl =>
+    `<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:${cl.color}"></span>${cl.name}</span>`).join('');
+  // 배당 결과
+  const wYield = invested>0 ? wYieldNum/invested : 0;
   document.getElementById('pf-result').innerHTML =
     `<div class="bt-stat"><div class="k">가중평균 배당율</div><div class="v bt-good">${wYield.toFixed(2)}%/년</div></div>`
     + `<div class="bt-stat"><div class="k">연 배당</div><div class="v">${fk(grandDiv)}</div></div>`
     + `<div class="bt-stat"><div class="k">월 배당</div><div class="v">${fk(grandDiv/12)}</div></div>`
     + `<div class="bt-stat"><div class="k">주 배당</div><div class="v">${fk(grandDiv/52)}</div></div>`
-    + `<div class="bt-stat"><div class="k">비중 합계</div><div class="v ${Math.abs(grandW-100)<1?'bt-good':'bt-bad'}">${Math.round(grandW)}%</div></div>`;
+    + `<div class="bt-stat"><div class="k">전체 금융자산</div><div class="v">${fk(grand)}</div></div>`;
+  // 자산분류별 요약표
   let bd = '<tr><th style="text-align:left">자산분류</th><th>금액</th><th>비중</th><th>연 배당</th></tr>';
   PF_CLASSES.forEach(cl => {
     const b = byClass[cl.key];
     if(b.amt<=0) return;
     bd += `<tr><td style="text-align:left"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${cl.color};margin-right:5px"></span>${cl.name}</td>`
-      + `<td>${fk(b.amt)}</td><td>${total>0?(b.amt/total*100).toFixed(0):0}%</td><td>${fk(b.div)}</td></tr>`;
+      + `<td>${fk(b.amt)}</td><td>${grand>0?(b.amt/grand*100).toFixed(0):0}%</td><td>${fk(b.div)}</td></tr>`;
   });
   document.getElementById('pf-breakdown').innerHTML = bd;
 }
