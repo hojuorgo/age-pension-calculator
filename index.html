@@ -104,6 +104,25 @@
     .wb-option input[type="radio"] { margin-top: 3px; accent-color: #16a34a; flex-shrink: 0; }
     .ib-title { font-size: 0.84rem; font-weight: 700; color: var(--text); display: block; }
     .ib-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; display: block; margin-top: 2px; }
+    /* Work Bonus 상세 설명 아코디언 */
+    .wb-q { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; border: none; background: #16a34a;
+            color: #fff; font-weight: 800; font-size: 0.72rem; line-height: 1; cursor: pointer; margin-left: auto;
+            align-self: flex-start; transition: background 0.15s; }
+    .wb-q:hover { background: #15803d; }
+    .wb-panel { display: none; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;
+                padding: 12px 14px; font-size: 0.78rem; color: #374151; line-height: 1.75; }
+    .wb-panel.open { display: block; }
+    .wb-panel b { color: #166534; }
+    .wb-panel p { margin: 0 0 8px; }
+    .wb-panel p:last-child { margin-bottom: 0; }
+    .wb-panel ul { margin: 4px 0 8px 18px; padding: 0; }
+    .wb-panel li { margin-bottom: 3px; }
+    .wb-em { display: block; background: #dcfce7; border-radius: 8px; padding: 9px 11px; margin: 8px 0;
+             font-weight: 700; color: #166534; }
+    .wb-warn { display: block; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px;
+               padding: 9px 11px; margin: 8px 0; color: #92400e; }
+    .wb-danger { display: block; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px;
+                 padding: 10px 12px; margin: 0 0 10px; color: #991b1b; font-weight: 700; }
 
     /* PERIOD TOGGLE */
     .period-toggle { display: flex; background: var(--bg); border-radius: 10px; padding: 4px; gap: 4px; width: fit-content; margin: 0 auto 18px; }
@@ -364,7 +383,7 @@
     <div class="calc-panel">
       <div class="calc-header">
         <div class="ch-icon">🏦</div>
-        <div><h2>호주 노령연금 계산기</h2><p>2026년 3월 기준 | Services Australia 공식 요율</p></div>
+        <div><h2>호주 노령연금 계산기</h2><p>2026년 7월 기준 | Services Australia 공식 요율</p></div>
       </div>
       <div class="calc-body">
         <div class="form-grid" style="margin-bottom:18px;">
@@ -400,13 +419,39 @@
         <div class="wb-box">
           <div class="wb-title">💼 Work Bonus (근로소득 면제 제도)</div>
           <div class="wb-explainer">
-            <div class="wb-row"><span>✅</span><div><strong>Work Bonus란?</strong> Age Pension을 받으면서 일할 때 근로소득 일부를 소득 테스트에서 면제해주는 제도. <strong>고용·자영업 소득에만</strong> 적용.</div></div>
-            <div class="wb-row"><span>🪙</span><div><strong>매 격주 $300 자동 면제</strong> — 근로소득 중 첫 $300은 항상 제외됩니다.</div></div>
-            <div class="wb-row"><span>🏦</span><div><strong>Income Bank란?</strong> Centrelink 가상 적립통. 일을 <strong>하지 않은 특정 격주</strong>의 면제($300)를 포인트로 적립해뒀다가, 일을 <strong>많이 한 특정 격주</strong>에 꺼내 쓰는 방식 (최대 $11,800). <span class="wb-highlight">신규 수령자 첫날 $4,000 자동 지급</span></div></div>
+            <div class="wb-row"><span>✅</span><div><strong>Work Bonus란?</strong> Age Pension을 받으면서 일할 때 근로소득 일부를 <strong>연금 소득 산정에서 아예 제외해주는 안전장치</strong>. <strong>고용·자영업 소득에만</strong> 적용.</div><button type="button" class="wb-q" onclick="wbToggle(1)" aria-label="Work Bonus 상세 설명">?</button></div>
+            <div class="wb-panel" id="wb-panel-1">
+              <p><b>왜 필요한가</b> — Age Pension은 소득이 많으면 줄어듭니다. 프리존(무료한도)을 넘는 소득 <b>$1당 $0.50</b>씩 연금이 깎입니다. Work Bonus는 깎인 연금을 나중에 되돌려주는 게 아니라, <b>처음부터 없는 소득으로 취급</b>해 감액 자체를 막아줍니다.</p>
+              <span class="wb-em">💡 부부 중 한 명만 일하는 경우<br/>Work Bonus $300 + 커플 프리존 $396 = <b>격주 $696</b>(월 약 $1,508)까지 벌어도 연금 감액 0</span>
+              <span class="wb-warn">⚠ 위 금액은 <b>다른 소득이 전혀 없을 때</b> 기준입니다. 예금·투자의 디밍(간주) 소득이 이미 격주 $300 있다면, 프리존은 그만큼 차서 근로소득은 $396까지만 무감액이 됩니다.</span>
+              <p><b>적용되는 소득 ✅</b></p>
+              <ul><li>고용주에게 받는 임금·급여</li><li>실제 노동이 들어가는 자영업 소득</li><li>본인 회사에서 받는 급여</li></ul>
+              <p><b>적용 안 되는 소득 ❌</b></p>
+              <ul><li>임대소득 · 배당 · 이자</li><li>Super 인출금</li><li>단순 투자관리 수익</li></ul>
+            </div>
+            <div class="wb-row"><span>🪙</span><div><strong>매 격주 $300 소득 산정에서 제외</strong> — 매번 반복 적용되며 소진되지 않습니다.</div><button type="button" class="wb-q" onclick="wbToggle(2)" aria-label="격주 $300 상세 설명">?</button></div>
+            <div class="wb-panel" id="wb-panel-2">
+              <p>근로소득 중 <b>첫 $300은 매 격주 다시 살아납니다.</b> 쓴다고 사라지지 않고, 아래 Income Bank를 모두 소진해도 이 $300은 그대로 남습니다.</p>
+              <span class="wb-em">📌 예시 — 부부, 남편만 격주 $600 근로<br/>$600 − Work Bonus $300 = <b>산정액 $300</b> → 커플 프리존 $396 이내 → <b>연금 감액 0</b></span>
+              <p>격주 $700을 벌면? $700 − $300 = $400, 프리존 $396 초과분은 $4뿐이라 감액은 <b>격주 $2</b>에 그칩니다.</p>
+            </div>
+            <div class="wb-row"><span>🏦</span><div><strong>Income Bank란?</strong> <strong>안 쓴 $300이 쌓이는 소득 제외 한도 잔액</strong>. 일을 <strong>하지 않은 격주</strong>의 $300이 적립됐다가, 일을 <strong>많이 한 격주</strong>에 꺼내 쓰는 방식 (최대 $11,800). <span class="wb-highlight">신규 수령자 시작 잔액 $4,000 (현금 지급 아님)</span></div><button type="button" class="wb-q" onclick="wbToggle(3)" aria-label="Income Bank 상세 설명">?</button></div>
+            <div class="wb-panel" id="wb-panel-3">
+              <span class="wb-danger">🚨 $11,800과 $4,000은 <u>받는 돈이 아닙니다</u>. 소득으로 <b>안 잡아주는 한도</b>일 뿐입니다. 연금이 늘어나는 효과는 감액률이 $0.50이라 <b>최대 그 절반</b>까지입니다.</span>
+              <p><b>계산 순서</b></p>
+              <ul>
+                <li>① 근로소득에서 <b>격주 $300</b> 먼저 제외</li>
+                <li>② 남은 금액을 <b>Income Bank 잔액에서 차감</b></li>
+                <li>③ 그래도 남는 금액만 소득 테스트에 반영</li>
+              </ul>
+              <p>근로소득이 $300 미만이면 <b>차액이 잔액에 적립</b>됩니다(최대 $11,800). 회계연도 리셋 없이 계속 이월됩니다.</p>
+              <span class="wb-em">📌 예시 — 2년간 일 안 함 → 잔액 $11,800 적립<br/>이후 격주 $2,000짜리 단기 계약 3회: 매회 $300 제외 후 <b>$1,700씩 차감</b> → 합계 $5,100 사용, 잔액 $6,700 남음 → <b>연금 감액 0</b></span>
+              <span class="wb-warn">📅 시작 잔액 $4,000은 2022년 12월 시행, 2024년 1월 영구화됐으며 <b>원칙적으로 평생 1회</b>입니다. 다만 <b>2026년 7월 1일부터</b> 연금 수급이 2년 이상 중단됐다가 재개되면 재지급이 가능합니다 (개별 상황은 Centrelink 확인 필요).</span>
+            </div>
           </div>
           <div style="font-size:0.81rem;font-weight:700;color:#166534;margin-bottom:8px;">Income Bank 잔액 설정</div>
           <div class="wb-options">
-            <div class="wb-option"><input type="radio" name="ib-type" id="ib-new" value="new" checked onchange="updateIB()"/><label for="ib-new"><span class="ib-title">🆕 신규 수령자 (2024년 1월 이후)</span><span class="ib-desc">처음 받는 경우 — $4,000 자동 적용</span></label></div>
+            <div class="wb-option"><input type="radio" name="ib-type" id="ib-new" value="new" checked onchange="updateIB()"/><label for="ib-new"><span class="ib-title">🆕 신규 수령자 (2022년 12월 이후)</span><span class="ib-desc">처음 받는 경우 — 시작 잔액 $4,000 적용 (현금 지급 아님)</span></label></div>
             <div class="wb-option"><input type="radio" name="ib-type" id="ib-existing" value="existing" onchange="updateIB()"/><label for="ib-existing"><span class="ib-title">📋 기존 수령자</span><span class="ib-desc">MyGov → Centrelink → Payment → Work Bonus에서 잔액 확인 후 입력</span></label></div>
             <div class="wb-option"><input type="radio" name="ib-type" id="ib-ignore" value="ignore" onchange="updateIB()"/><label for="ib-ignore"><span class="ib-title">⏭ Income Bank 무시</span><span class="ib-desc">격주 $300 면제만 적용</span></label></div>
           </div>
@@ -474,7 +519,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="info-box"><strong>📌 계산 기준</strong><br/>• 소득/자산 테스트 중 <strong>더 낮은 금액</strong>이 실제 수령액<br/>• 소득 테스트: 무료한도 초과 $1당 <strong>$0.50</strong> 감액 (싱글 $218, 커플 $380/격주)<br/>• 자산 테스트: 전액한도 초과 $1,000당 격주 <strong>$3.00</strong> 감액</div>
+            <div class="info-box"><strong>📌 계산 기준</strong><br/>• 소득/자산 테스트 중 <strong>더 낮은 금액</strong>이 실제 수령액<br/>• 소득 테스트: 무료한도 초과 $1당 <strong>$0.50</strong> 감액 (싱글 $226, 커플 $396/격주)<br/>• 자산 테스트: 전액한도 초과 $1,000당 격주 <strong>$3.00</strong> 감액</div>
           </div>
         </div>
       </div>
@@ -783,17 +828,18 @@
 
 <footer>
   <strong>호주 은퇴 재정 도구</strong> — 노령연금 · 포트폴리오 배당 · 인출 백테스트<br/>
-  2026년 3월 기준 Services Australia 공식 요율 적용 | 교육·참고용이며 개인 금융조언이 아닙니다 · 정확한 수령액은 Centrelink에 문의하세요<br/>
+  2026년 7월 기준 Services Australia 공식 요율 적용 | 교육·참고용이며 개인 금융조언이 아닙니다 · 정확한 수령액은 Centrelink에 문의하세요<br/>
   <span style="opacity:0.7;">문의·개선 제안: 카카오톡 hojuicon</span>
 </footer>
 
 <script>
 // ===== 상수 =====
+// 2026년 7월 1일 기준 threshold. couple은 '부부 합산' 기준 (base/supplement/energy/taper 모두 합산값)
 const RATES = {
-  single: { base:1100.30, supplement:86.50, energy:14.10, incomeFree:218, taper:0.50,
-            assetsOwner:321500, assetsNonOwner:579500, cutoffOwner:722000, cutoffNonOwner:980000 },
-  couple: { base:829.40, supplement:65.20, energy:10.60, incomeFree:380, taper:0.25,
-            assetsOwner:481500, assetsNonOwner:739500, cutoffOwner:1085000, cutoffNonOwner:1343000 }
+  single: { base:1100.30, supplement:86.50, energy:14.10, incomeFree:226, taper:0.50,
+            assetsOwner:333000, assetsNonOwner:600000, cutoffOwner:733500, cutoffNonOwner:1000500 },
+  couple: { base:1658.80, supplement:130.40, energy:21.20, incomeFree:396, taper:0.50,
+            assetsOwner:499000, assetsNonOwner:766000, cutoffOwner:1102500, cutoffNonOwner:1369500 }
 };
 
 // ===== 공통 유틸 =====
@@ -932,6 +978,13 @@ function showSection(s){
 // ===== 기존 노령연금 계산기 =====
 let period='weekly', lastFn=0, lastIPFn=0, lastAPFn=0, lastMaxFn=0, lastIRedFn=0, lastARedFn=0, lastIsCouple=false;
 
+// Work Bonus 상세 설명 아코디언 — 하나만 열리고 나머지는 닫힘
+function wbToggle(n){
+  document.querySelectorAll('.wb-panel').forEach(p=>{
+    if(p.id === 'wb-panel-'+n) p.classList.toggle('open');
+    else p.classList.remove('open');
+  });
+}
 function updateIB(){
   document.getElementById('ib-custom').style.display=
     document.querySelector('input[name="ib-type"]:checked').value==='existing'?'block':'none';
@@ -1052,7 +1105,7 @@ function showFnConvert(id){
 }
 
 function calcDeeming(financialAssets, isCouple){
-  const threshold = isCouple ? 106200 : 64200;
+  const threshold = isCouple ? 110600 : 66800;
   const low = Math.min(financialAssets, threshold);
   const high = Math.max(0, financialAssets - threshold);
   const annualDeeming = low * 0.0125 + high * 0.0325;
